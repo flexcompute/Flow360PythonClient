@@ -9,9 +9,34 @@ boto3.setup_default_session(region_name='us-east-1')
 from warrant import Cognito
 from warrant.aws_srp import AWSSRP
 
+email = ''
+password = ''
 
-def getCredentials(username, password):
+tokenRefreshTime = None
+tokenDuration = 3500.
+creds = None
+auth = None
 
+def email2username(email):
+    return email.replace('@','-at-')
+
+def refreshToken(func):
+    def wrapper(*args, **kwargs):
+        global creds
+        global auth
+        if tokenRefreshTime is None:
+            creds = getCredentials()
+            auth = getAPIAuthentication(creds)
+        elif time.time() - tokenRefreshTime > tokenDuration:
+            print('refreshing tokens...')
+            creds = getCredentials()
+            auth = getAPIAuthentication(creds)
+        resp = func(*args, **kwargs)
+        return resp
+    return wrapper
+
+def getCredentials():
+    username = email2username(email)
     u = Cognito('us-east-1_Csq1uNAO3','scepvluho5eeehv297pvdunk5',
                 username=username,
                 access_key='AKIAIOSFODNN7EXAMPLE',
@@ -30,7 +55,8 @@ def getCredentials(username, password):
 
     creds = client.get_credentials_for_identity(IdentityId=resp['IdentityId'],
                                                 Logins=login)
-
+    global tokenRefreshTime
+    tokenRefreshTime = time.time()
     return creds
 
 def getAPIAuthentication(creds):
@@ -42,3 +68,5 @@ def getAPIAuthentication(creds):
                            aws_service='execute-api')
     return auth
 
+creds = getCredentials()
+auth = getAPIAuthentication(creds)

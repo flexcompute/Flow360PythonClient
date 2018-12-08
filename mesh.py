@@ -4,7 +4,7 @@ import requests
 import os
 import json
 import sys
-from authentication import getCredentials, getAPIAuthentication
+from authentication import *
 from httputils import post, get, delete
 
 boto3.setup_default_session(region_name='us-east-1')
@@ -12,13 +12,10 @@ boto3.setup_default_session(region_name='us-east-1')
 class FileDoesNotExist(Exception):
     pass
 
-def email2username(email):
-    return email.replace('@','-at-')
 
-creds = getCredentials(email2username('youremail'),
-                       'yourpassword')
+#creds = getCredentials('youremail', 'yourpassword')
 
-auth = getAPIAuthentication(creds)
+#auth = getAPIAuthentication(creds)
 
 flow360url = 'https://zcvxbr69d2.execute-api.us-east-1.amazonaws.com/beta'
 
@@ -29,6 +26,7 @@ s3Client = boto3.client(
     aws_session_token=creds['Credentials']['SessionToken'],
 )
 
+@refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness):
     body = {
         "name": name,
@@ -43,6 +41,7 @@ def AddMesh(name, noSlipWalls, tags, fmat, endianness):
     resp = post(url, auth=auth, data=json.dumps(body))
     return resp
 
+@refreshToken
 def DeleteMesh(meshId):
     params = {
         "meshId": meshId,
@@ -53,6 +52,7 @@ def DeleteMesh(meshId):
     resp = delete(url, auth=auth, params=params)
     return resp
 
+@refreshToken
 def GetMeshInfo(meshId):
     params = {
         "meshId": meshId,
@@ -63,6 +63,7 @@ def GetMeshInfo(meshId):
     resp = get(url, auth=auth, params=params)
     return resp
 
+@refreshToken
 def ListMeshes(name=None, status=None):
     params = {
         "name": name,
@@ -85,6 +86,7 @@ class UploadProgress(object):
         sys.stdout.write('\rfile upload progress: {0:2.2f} %'.format(float(self.uploadedSoFar)/self.size*100))
         sys.stdout.flush()
 
+@refreshToken
 def UploadMesh(meshId, meshFile):
     fileName = os.path.basename(meshFile)
     if not os.path.exists(meshFile):
