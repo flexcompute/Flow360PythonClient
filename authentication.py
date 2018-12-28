@@ -62,13 +62,6 @@ def refreshToken(func):
     def wrapper(*args, **kwargs):
         global creds
         global auth
-        #if tokenRefreshTime is None:
-        #    creds = getCredentials()
-        #    auth = getAPIAuthentication(creds)
-        #elif time.time() - tokenRefreshTime > tokenDuration:
-        #    print('refreshing tokens...')
-        #    creds = getCredentials()
-        #    auth = getAPIAuthentication(creds)
         auth = getAPIAuthentication(None)
         resp = func(*args, **kwargs)
         return resp
@@ -99,12 +92,6 @@ def getCredentials():
     return creds
 
 def getAPIAuthentication(creds):
-    #auth = AWSRequestsAuth(aws_access_key=creds['Credentials']['AccessKeyId'],
-    #                       aws_secret_access_key=creds['Credentials']['SecretKey'],
-    #                       aws_token = creds['Credentials']['SessionToken'],
-    #                       aws_host='zcvxbr69d2.execute-api.us-east-1.amazonaws.com',
-    #                       aws_region='us-east-1',
-    #                       aws_service='execute-api')
     auth = AWSRequestsAuth(aws_access_key=access_key,
                            aws_secret_access_key=secret_access_key,
                            aws_host='dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com',
@@ -113,6 +100,4 @@ def getAPIAuthentication(creds):
 
     return auth
 
-#creds = getCredentials()
 auth = getAPIAuthentication(None)
-#print(dir(auth))
