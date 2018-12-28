@@ -43,10 +43,10 @@ def getEmailPasswd():
 #email, password = getEmailPasswd()
 
 with open(os.path.expanduser('~/.flow360/access_key'),'r') as f:
-    access_key = f.read()
+    access_key = f.read().strip()
 
 with open(os.path.expanduser('~/.flow360/secret_access_key'),'r') as f:
-    secret_access_key = f.read()
+    secret_access_key = f.read().strip()
 
 #user_id = 'AIDALBZRC6BAHBQD3SRWU'
 
