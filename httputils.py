@@ -28,7 +28,6 @@ def get(url, params=None, auth=None, headers=None):
         queryUrl = '{0}?{1}'.format(url, urllib.parse.urlencode(params))
     return requests.get(queryUrl, auth=auth)
 
-@handle_response
 def delete(url, params=None, auth=None, headers=None):
     if params is None:
         queryUrl = url

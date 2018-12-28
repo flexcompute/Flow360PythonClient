@@ -1,7 +1,9 @@
 import boto3
 import time
 import requests
+import getpass
 import json
+import os
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 boto3.setup_default_session(region_name='us-east-1')
@@ -9,8 +11,44 @@ boto3.setup_default_session(region_name='us-east-1')
 from warrant import Cognito
 from warrant.aws_srp import AWSSRP
 
-email = ''
-password = ''
+def getEmailPasswd():
+    flow360dir = os.path.expanduser('~/.flow360')
+    if os.path.exists('{0}/{1}'.format(flow360dir,'passwd')):
+        with open(os.path.join(flow360dir,'passwd'),'r') as f:
+            password = f.read()
+    if os.path.exists('{0}/{1}'.format(flow360dir,'email')):
+        with open(os.path.join(flow360dir,'email'),'r') as f:
+            email = f.read()
+    else:
+        email = input('simulation.cloud email:')
+        password = getpass.getpass()
+        login = input('Do you want to keep logged in on this machine ([Y]es / [N]o)')
+        if login == 'Y':
+            try:
+                os.mkdir(flow360dir)
+            except OSError as e:
+                pass
+
+            with open(os.path.join(flow360dir,'passwd'),'w') as f:
+                f.write(password)
+            with open(os.path.join(flow360dir,'email'),'w') as f:
+                f.write(email)
+            
+        elif login == 'N':
+            os.mkdir(flow360dir)
+        else:
+            raise RuntimeError('Unknown keep logged in response {0}!'.format(login))
+    return (email, password)
+
+#email, password = getEmailPasswd()
+
+with open(os.path.expanduser('~/.flow360/access_key'),'r') as f:
+    access_key = f.read()
+
+with open(os.path.expanduser('~/.flow360/secret_access_key'),'r') as f:
+    secret_access_key = f.read()
+
+#user_id = 'AIDALBZRC6BAHBQD3SRWU'
 
 tokenRefreshTime = None
 tokenDuration = 3500.
@@ -24,13 +62,14 @@ def refreshToken(func):
     def wrapper(*args, **kwargs):
         global creds
         global auth
-        if tokenRefreshTime is None:
-            creds = getCredentials()
-            auth = getAPIAuthentication(creds)
-        elif time.time() - tokenRefreshTime > tokenDuration:
-            print('refreshing tokens...')
-            creds = getCredentials()
-            auth = getAPIAuthentication(creds)
+        #if tokenRefreshTime is None:
+        #    creds = getCredentials()
+        #    auth = getAPIAuthentication(creds)
+        #elif time.time() - tokenRefreshTime > tokenDuration:
+        #    print('refreshing tokens...')
+        #    creds = getCredentials()
+        #    auth = getAPIAuthentication(creds)
+        auth = getAPIAuthentication(None)
         resp = func(*args, **kwargs)
         return resp
     return wrapper
@@ -60,13 +99,20 @@ def getCredentials():
     return creds
 
 def getAPIAuthentication(creds):
-    auth = AWSRequestsAuth(aws_access_key=creds['Credentials']['AccessKeyId'],
-                           aws_secret_access_key=creds['Credentials']['SecretKey'],
-                           aws_token = creds['Credentials']['SessionToken'],
-                           aws_host='zcvxbr69d2.execute-api.us-east-1.amazonaws.com',
-                           aws_region='us-east-1',
+    #auth = AWSRequestsAuth(aws_access_key=creds['Credentials']['AccessKeyId'],
+    #                       aws_secret_access_key=creds['Credentials']['SecretKey'],
+    #                       aws_token = creds['Credentials']['SessionToken'],
+    #                       aws_host='zcvxbr69d2.execute-api.us-east-1.amazonaws.com',
+    #                       aws_region='us-east-1',
+    #                       aws_service='execute-api')
+    auth = AWSRequestsAuth(aws_access_key=access_key,
+                           aws_secret_access_key=secret_access_key,
+                           aws_host='dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com',
+                           aws_region='us-gov-west-1',
                            aws_service='execute-api')
+
     return auth
 
-creds = getCredentials()
-auth = getAPIAuthentication(creds)
+#creds = getCredentials()
+auth = getAPIAuthentication(None)
+#print(dir(auth))
