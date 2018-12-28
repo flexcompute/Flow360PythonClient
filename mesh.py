@@ -12,15 +12,7 @@ boto3.setup_default_session(region_name='us-east-1')
 class FileDoesNotExist(Exception):
     pass
 
-flow360url = 'https://zcvxbr69d2.execute-api.us-east-1.amazonaws.com/beta'
 flow360url = 'https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1'
-
-#s3Client = boto3.client(
-#    's3',
-#    aws_access_key_id=creds['Credentials']['AccessKeyId'],
-#    aws_secret_access_key=creds['Credentials']['SecretKey'],
-#    aws_session_token=creds['Credentials']['SessionToken'],
-#)
 s3Client = boto3.client(
     's3',
     aws_access_key_id=access_key,
@@ -38,7 +30,7 @@ def AddMesh(name, noSlipWalls, tags, fmat, endianness):
         "noSlipWalls" : noSlipWalls,
     }
     
-    url = '{0}/{1}'.format(flow360url, 'add-mesh')
+    url = flow360url + '/add-mesh'
 
     resp = post(url, auth=auth, data=json.dumps(body))
     return resp
@@ -49,7 +41,7 @@ def DeleteMesh(meshId):
         "meshId": meshId,
     }
     
-    url = '{0}/{1}'.format(flow360url, 'delete-mesh')
+    url = flow360url + '/delete-mesh'
 
     resp = delete(url, auth=auth, params=params)
     return resp
@@ -60,7 +52,7 @@ def GetMeshInfo(meshId):
         "meshId": meshId,
     }
     
-    url = '{0}/{1}'.format(flow360url, 'get-mesh-info')
+    url = flow360url + '/get-mesh-info'
 
     resp = get(url, auth=auth, params=params)
     return resp
@@ -72,7 +64,7 @@ def ListMeshes(name=None, status=None):
         "status": status,
     }
     
-    url = '{0}/{1}'.format(flow360url, 'list-meshes')
+    url = flow360url + '/list-meshes'
 
     resp = get(url, auth=auth, params=params)
     return resp
@@ -89,23 +81,28 @@ class UploadProgress(object):
         sys.stdout.flush()
 
 @refreshToken
-def UploadMesh(meshId, meshFile, meshFormat='ugrid', endianness='big'):
+def UploadMesh(meshId, meshFile):
     def getMeshName(meshFile, meshFormat, endianness):
-        if meshFormat == 'ugrid':
+        if meshFormat == 'aflr3':
             if endianness == 'big':
-                return 'mesh.b8.ugrid'
+                name = 'mesh.b8.ugrid'
+            elif endianness == 'little':
+                name ='mesh.lb8.ugrid'
             else:
-                return  'mesh.lb8.ugrid'
+                raise RuntimeError("unknown endianness: {}".format(endianness))
+        else:
+            raise RuntimeError("unknown meshFormat: {}".format(meshFormat))
+        if meshFile.endswith('.gz'):
+            name += '.gz'
+        elif meshFile.endswith('.bz2'):
+            name += '.bz2'
+        return name
 
-    if meshFormat != 'ugrid':
-        raise RuntimeError('Invalid mesh type: {0}'.format(meshFormat))
-
-    if endianness not in ['big', 'litte']:
-        raise RuntimeError('Invalid mesh endianness: {0}!'.format(endianness))
-
-    fileName = getMeshName(meshFile, meshFormat, endianness)
+    meshInfo = GetMeshInfo(meshId)
+    print(meshInfo)
+    fileName = getMeshName(meshFile, meshInfo['format'],
+                           meshInfo['endianness'])
     
-    #fileName = os.path.basename(meshFile)
     if not os.path.exists(meshFile):
         print('mesh file {0} does not Exist!'.format(meshFile))
         raise FileDoesNotExist(meshFile)
@@ -120,3 +117,4 @@ def UploadMesh(meshId, meshFile, meshFormat='ugrid', endianness='big'):
                          Filename=meshFile,
                          Key='users/{0}/{1}/{2}'.format(user_id, meshId, fileName),
                          Callback = prog.report)
+    print()
