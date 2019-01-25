@@ -12,7 +12,7 @@ boto3.setup_default_session(region_name='us-east-1')
 class FileDoesNotExist(Exception):
     pass
 
-flow360url = 'https://zcvxbr69d2.execute-api.us-east-1.amazonaws.com/beta'
+#flow360url = 'https://zcvxbr69d2.execute-api.us-east-1.amazonaws.com/beta'
 flow360url = 'https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1'
 
 #s3Client = boto3.client(
@@ -21,12 +21,12 @@ flow360url = 'https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1'
 #    aws_secret_access_key=creds['Credentials']['SecretKey'],
 #    aws_session_token=creds['Credentials']['SessionToken'],
 #)
-s3Client = boto3.client(
-    's3',
-    aws_access_key_id=access_key,
-    aws_secret_access_key=secret_access_key,
-    region_name = 'us-gov-west-1'
-)
+#s3Client = boto3.client(
+#    's3',
+#    aws_access_key_id=access_key,
+#    aws_secret_access_key=secret_access_key,
+#    region_name = 'us-gov-west-1'
+#)
 
 @refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness):

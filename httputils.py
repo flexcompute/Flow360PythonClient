@@ -17,8 +17,13 @@ def handle_response(func):
     return wrapper
 
 @handle_response
-def post(url, data, auth=None, headers=None):
-    return requests.post(url, auth=auth, data=data)
+def post(url, data, auth=None, headers=None, params=None):
+    if params is None:
+        queryUrl = url
+    else:
+        queryUrl = '{0}?{1}'.format(url, urllib.parse.urlencode(params))
+
+    return requests.post(queryUrl, auth=auth, data=data)
 
 @handle_response
 def get(url, params=None, auth=None, headers=None):
