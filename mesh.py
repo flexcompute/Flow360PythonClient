@@ -4,29 +4,10 @@ import requests
 import os
 import json
 import sys
-from authentication import *
-from httputils import post, get, delete
+from authentication import auth, refreshToken
+from httputils import post, get, delete, s3Client
+from httputils import FileDoesNotExist
 
-boto3.setup_default_session(region_name='us-east-1')
-
-class FileDoesNotExist(Exception):
-    pass
-
-#flow360url = 'https://zcvxbr69d2.execute-api.us-east-1.amazonaws.com/beta'
-flow360url = 'https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1'
-
-#s3Client = boto3.client(
-#    's3',
-#    aws_access_key_id=creds['Credentials']['AccessKeyId'],
-#    aws_secret_access_key=creds['Credentials']['SecretKey'],
-#    aws_session_token=creds['Credentials']['SessionToken'],
-#)
-#s3Client = boto3.client(
-#    's3',
-#    aws_access_key_id=access_key,
-#    aws_secret_access_key=secret_access_key,
-#    region_name = 'us-gov-west-1'
-#)
 
 @refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness):
@@ -105,17 +86,12 @@ def UploadMesh(meshId, meshFile, meshFormat='ugrid', endianness='big'):
 
     fileName = getMeshName(meshFile, meshFormat, endianness)
     
-    #fileName = os.path.basename(meshFile)
     if not os.path.exists(meshFile):
         print('mesh file {0} does not Exist!'.format(meshFile))
         raise FileDoesNotExist(meshFile)
 
     fileSize = os.path.getsize(meshFile)
     prog = UploadProgress(fileSize)
-    #s3Client.upload_file(Bucket='flow360meshes',
-    #                     Filename=meshFile,
-    #                     Key='users/{0}/meshes/{1}/{2}'.format(creds['IdentityId'], meshId, fileName),
-    #                     Callback = prog.report)
     s3Client.upload_file(Bucket='flow360meshes',
                          Filename=meshFile,
                          Key='users/{0}/{1}/{2}'.format(user_id, meshId, fileName),

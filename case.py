@@ -4,23 +4,10 @@ import requests
 import os
 import json
 import sys
-from authentication import *
-from httputils import post, get, delete
+from authentication import auth, refreshToken
+from httputils import post, get, delete, s3Client, flow360url
+from httputils import FileDoesNotExist
 
-boto3.setup_default_session(region_name='us-east-1')
-
-class FileDoesNotExist(Exception):
-    pass
-
-#flow360url = 'https://zcvxbr69d2.execute-api.us-east-1.amazonaws.com/beta'
-flow360url = 'https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1'
-
-s3Client = boto3.client(
-    's3',
-    aws_access_key_id=keys['UserAccessKey'],
-    aws_secret_access_key=keys['UserSecretAccessKey'],
-    region_name = 'us-gov-west-1'
-)
 
 @refreshToken
 def SubmitCase(name, tags, meshId, priority, configFile, parentId=None):

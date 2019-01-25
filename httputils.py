@@ -1,10 +1,24 @@
 import requests
 import urllib
+import boto3
+
+from authentication import keys
+
+class FileDoesNotExist(Exception):
+    pass
+
+flow360url = 'https://dsxjn7ioqe.execute-api.us-gov-west-1.amazonaws.com/beta-1'
+
+s3Client = boto3.client(
+    's3',
+    aws_access_key_id=keys['UserAccessKey'],
+    aws_secret_access_key=keys['UserSecretAccessKey'],
+    region_name = 'us-gov-west-1'
+)
 
 def handle_response(func):
     def wrapper(*args, **kwargs):
         resp = func(*args, **kwargs)
-        #print(resp.text)
         if resp.status_code != 200:
             print(resp.text)
             resp.raise_for_status()
