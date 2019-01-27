@@ -4,6 +4,7 @@ import requests
 import getpass
 import json
 import os
+import functools
 from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 boto3.setup_default_session(region_name='us-east-1')
@@ -96,6 +97,7 @@ def getAPIAuthentication(creds):
 auth, keys = getAPIAuthentication(getCredentials())
 
 def refreshToken(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         global creds
         global auth

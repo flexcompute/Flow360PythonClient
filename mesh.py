@@ -10,6 +10,18 @@ from httputils import FileDoesNotExist
 
 @refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness):
+    '''
+    AddMesh(name, noSlipWalls, tags, fmat, endianness)
+    returns the raw HTTP response
+    {
+        'meshId' : 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        'addTime' : '2019:01:01:01:01:01.000000'
+    }
+    The returned meshId is need to subsequently call UploadMesh
+    Example:
+        resp = AddMesh('foo', [1], [], 'aflr3', 'big')
+        UploadMesh(resp['meshId'], 'mesh.lb8.ugrid')
+    '''
     body = {
         "name": name,
         "tags": tags,
@@ -70,6 +82,9 @@ class UploadProgress(object):
 
 @refreshToken
 def UploadMesh(meshId, meshFile):
+    '''
+    UploadMesh(meshId, meshFile)
+    '''
     def getMeshName(meshFile, meshFormat, endianness):
         if meshFormat == 'aflr3':
             if endianness == 'big':

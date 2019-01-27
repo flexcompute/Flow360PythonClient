@@ -1,0 +1,50 @@
+{
+    "geometry": {
+        "refArea": 100
+    },
+    "volumeOutput": {
+        "vorticity": false,
+        "residual": false,
+        "T": false,
+        "s": false,
+        "mut": false,
+        "mutRatio": false
+    },
+    "navierStokesSolver": {
+        "tolerance": 1e-10,
+        "CFL": {
+            "initial": 0.5,
+            "final": 200,
+            "rampSteps": 200
+        },
+        "linearIterations": 30
+    },
+    "turbulenceModelSolver": {
+        "modelType": "SpalartAllmaras",
+        "tolerance": 1e-8,
+        "CFL": {
+            "initial": 0.5,
+            "final": 200,
+            "rampSteps": 200
+        },
+        "linearIterations": 20
+    },
+    "freestream": {
+        "Reynolds": 10000000,
+        "Mach": 0.25,
+        "Temperature": 300,
+        "alphaAngle": 0,
+        "betaAngle": 0
+    },
+    "boundaries": {
+        "1": {
+            "type": "NoSlipWall"
+        },
+        "2": {
+            "type": "SlipWall"
+        },
+        "3": {
+            "type": "Freestream"
+        }
+    }
+}
