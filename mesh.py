@@ -5,7 +5,7 @@ import os
 import json
 import sys
 from authentication import auth, refreshToken
-from httputils import post, get, delete, s3Client
+from httputils import post, get, delete, s3Client, flow360url
 from httputils import FileDoesNotExist
 
 @refreshToken
@@ -51,7 +51,7 @@ def ListMeshes(name=None, status=None):
         "name": name,
         "status": status,
     }
-    
+
     url = flow360url + '/list-meshes'
 
     resp = get(url, auth=auth, params=params)

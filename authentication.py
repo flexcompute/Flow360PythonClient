@@ -24,18 +24,13 @@ def getEmailPasswd():
         password = getpass.getpass()
         login = input('Do you want to keep logged in on this machine ([Y]es / [N]o)')
         if login == 'Y':
-            try:
-                os.mkdir(flow360dir)
-            except OSError as e:
-                pass
-
+            os.makedirs(flow360dir, exist_ok=True)
             with open(os.path.join(flow360dir,'passwd'),'w') as f:
                 f.write(password)
             with open(os.path.join(flow360dir,'email'),'w') as f:
                 f.write(email)
-            
         elif login == 'N':
-            os.mkdir(flow360dir)
+            os.makedirs(flow360dir, exist_ok=True)
         else:
             raise RuntimeError('Unknown keep logged in response {0}!'.format(login))
     return (email, password)
