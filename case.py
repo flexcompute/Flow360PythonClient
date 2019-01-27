@@ -6,16 +6,9 @@ import json
 import sys
 from authentication import auth, keys, refreshToken
 from httputils import post, get, delete, s3Client, flow360url
-from httputils import FileDoesNotExist
-
 
 @refreshToken
-def SubmitCase(name, tags, meshId, priority, configFile, parentId=None):
-    if not os.path.exists(configFile):
-        print('config file {0} does not Exist!'.format(configFile))
-        raise FileDoesNotExist(meshFile)
-    with open(configFile,'r') as f:
-        config = json.loads(f.read())
+def SubmitCase(name, tags, meshId, priority, config, parentId=None):
     body = {
         "name": name,
         "tags": tags,
@@ -24,7 +17,7 @@ def SubmitCase(name, tags, meshId, priority, configFile, parentId=None):
         "runtimeParams" : config,
         "parentId" : parentId
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'submit-case')
 
     resp = post(url, auth=auth, data=json.dumps(body))
@@ -35,7 +28,7 @@ def DeleteCase(caseId):
     params = {
         "caseId": caseId,
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'delete-case')
 
     resp = delete(url, auth=auth, params=params)
@@ -46,7 +39,7 @@ def GetCaseInfo(caseId):
     params = {
         "caseId": caseId,
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'get-case-info')
 
     resp = get(url, auth=auth, params=params)
@@ -58,7 +51,7 @@ def PauseResumeCase(caseId, action):
         "caseId": caseId,
         "action" : action
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'pause-resume-case')
 
     resp = post(url, auth=auth, data=json.dumps(data))
