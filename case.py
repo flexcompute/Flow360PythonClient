@@ -4,7 +4,7 @@ import requests
 import os
 import json
 import sys
-from authentication import auth, refreshToken
+from authentication import auth, keys, refreshToken
 from httputils import post, get, delete, s3Client, flow360url
 from httputils import FileDoesNotExist
 
@@ -71,7 +71,7 @@ def ListCases(name=None, status=None, meshId=None):
         "status": status,
         "meshId" : meshId
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'list-cases')
 
     resp = get(url, auth=auth, params=params)
@@ -82,7 +82,7 @@ def GetCaseResidual(caseId):
     params = {
         "caseId" : caseId
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'get-case-residual')
 
     resp = get(url, auth=auth, params=params)
@@ -93,7 +93,7 @@ def GetCaseTotalForces(caseId):
     params = {
         "caseId" : caseId
     }
-    
+
     url = '{0}/{1}'.format(flow360url, 'get-case-total-forces')
 
     resp = get(url, auth=auth, params=params)
@@ -108,9 +108,16 @@ def GetCaseSurfaceForces(caseId, surfaceIds):
     body = {
         "surfaceIds" : surfaceIds
     }
-    
     url = '{0}/{1}'.format(flow360url, 'get-case-surface-forces')
 
     resp = post(url, auth=auth, data=json.dumps(body), params=params)
     return resp
 
+@refreshToken
+def DownloadCaseResults(caseId, fileName):
+    if fileName[-7:] != '.tar.gz':
+        print('fileName must have extension .tar.gz!')
+        return
+    s3Client.download_file(Bucket='flow360cases',
+                         Filename=fileName,
+                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))

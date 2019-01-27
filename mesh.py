@@ -4,9 +4,10 @@ import requests
 import os
 import json
 import sys
-from authentication import auth, refreshToken
-from httputils import post, get, delete, s3Client, flow360url
-from httputils import FileDoesNotExist
+from authentication import auth, keys, refreshToken
+from httputils import post, get, delete, s3Client
+from httputils import FileDoesNotExist, flow360url
+from boto3.s3.transfer import TransferConfig
 
 @refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness):
@@ -105,15 +106,20 @@ def UploadMesh(meshId, meshFile):
     print(meshInfo)
     fileName = getMeshName(meshFile, meshInfo['format'],
                            meshInfo['endianness'])
-    
+
     if not os.path.exists(meshFile):
         print('mesh file {0} does not Exist!'.format(meshFile))
         raise FileDoesNotExist(meshFile)
 
     fileSize = os.path.getsize(meshFile)
     prog = UploadProgress(fileSize)
+    config = TransferConfig()
+    #config = TransferConfig(multipart_chunksize=33554432,
+    #                        max_concurrency=100)
+    config = TransferConfig(max_concurrency=100)
+
     s3Client.upload_file(Bucket='flow360meshes',
                          Filename=meshFile,
-                         Key='users/{0}/{1}/{2}'.format(user_id, meshId, fileName),
-                         Callback = prog.report)
-    print()
+                         Key='users/{0}/{1}/{2}'.format(keys['UserId'], meshId, fileName),
+                         Callback = prog.report,
+                         Config=config)

@@ -3,6 +3,7 @@ import time
 import requests
 import getpass
 import json
+import hashlib
 import os
 import functools
 from aws_requests_auth.aws_auth import AWSRequestsAuth
@@ -23,6 +24,10 @@ def getEmailPasswd():
     else:
         email = input('simulation.cloud email:')
         password = getpass.getpass()
+        salt = '5ac0e45f46654d70bda109477f10c299'
+        print(type(salt))
+        print(type(password))
+        password = hashlib.sha512(password.encode('utf-8') + salt.encode('utf-8')).hexdigest()
         login = input('Do you want to keep logged in on this machine ([Y]es / [N]o)')
         if login == 'Y':
             os.makedirs(flow360dir, exist_ok=True)
@@ -83,7 +88,7 @@ def getAPIAuthentication(creds):
 
     if keys['NewKeys']:
         sleepDur = 15
-        print('Waiting {0}s for new user to be configured...'.format(sleepDur))
+        print('Waiting {0}s for new keys to propagate...'.format(sleepDur))
         time.sleep(sleepDur)
 
     auth = AWSRequestsAuth(aws_access_key=keys['UserAccessKey'],
