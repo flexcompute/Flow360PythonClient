@@ -2,7 +2,7 @@ import requests
 import urllib
 import boto3
 
-from authentication import keys
+from .authentication import keys
 
 class FileDoesNotExist(Exception):
     pass

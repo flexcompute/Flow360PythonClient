@@ -4,10 +4,10 @@ import requests
 import os
 import json
 import sys
-from authentication import auth, keys, refreshToken
-from httputils import post, get, delete, s3Client
-from httputils import FileDoesNotExist, flow360url
 from boto3.s3.transfer import TransferConfig
+from .authentication import auth, keys, refreshToken
+from .httputils import post, get, delete, s3Client
+from .httputils import FileDoesNotExist, flow360url
 
 @refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness):

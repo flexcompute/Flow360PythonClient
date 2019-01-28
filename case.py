@@ -4,8 +4,8 @@ import requests
 import os
 import json
 import sys
-from authentication import auth, keys, refreshToken
-from httputils import post, get, delete, s3Client, flow360url
+from .authentication import auth, keys, refreshToken
+from .httputils import post, get, delete, s3Client, flow360url
 
 @refreshToken
 def SubmitCase(name, tags, meshId, priority, config, parentId=None):
