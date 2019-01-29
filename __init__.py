@@ -29,6 +29,7 @@ def newMesh(fname, noSlipWalls, meshName=None, tags=[],
     resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness)
     meshId = resp['meshId']
     mesh.UploadMesh(meshId, fname)
+    print()
     return meshId
 
 def newCase(meshId, config, caseName=None, tags=[],
