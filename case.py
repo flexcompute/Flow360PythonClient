@@ -58,7 +58,7 @@ def PauseResumeCase(caseId, action):
     return resp
 
 @refreshToken
-def ListCases(name=None, status=None, meshId=None):
+def ListCases(name=None, status=None, meshId=None, include_deleted=False):
     params = {
         "name": name,
         "status": status,
@@ -68,6 +68,8 @@ def ListCases(name=None, status=None, meshId=None):
     url = '{0}/{1}'.format(flow360url, 'list-cases')
 
     resp = get(url, auth=auth, params=params)
+    if not include_deleted:
+        resp = list(filter(lambda i : i['status'] != 'deleted', resp))
     return resp
 
 @refreshToken

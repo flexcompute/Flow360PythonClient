@@ -59,7 +59,7 @@ def GetMeshInfo(meshId):
     return resp
 
 @refreshToken
-def ListMeshes(name=None, status=None):
+def ListMeshes(name=None, status=None, include_deleted=False):
     params = {
         "name": name,
         "status": status,
@@ -68,6 +68,8 @@ def ListMeshes(name=None, status=None):
     url = flow360url + '/list-meshes'
 
     resp = get(url, auth=auth, params=params)
+    if not include_deleted:
+        resp = list(filter(lambda i : i['status'] != 'deleted', resp))
     return resp
 
 class UploadProgress(object):
