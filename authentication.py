@@ -25,8 +25,6 @@ def getEmailPasswd():
         email = input('simulation.cloud email:')
         password = getpass.getpass()
         salt = '5ac0e45f46654d70bda109477f10c299'
-        print(type(salt))
-        print(type(password))
         password = hashlib.sha512(password.encode('utf-8') + salt.encode('utf-8')).hexdigest()
         login = input('Do you want to keep logged in on this machine ([Y]es / [N]o)')
         if login == 'Y':
