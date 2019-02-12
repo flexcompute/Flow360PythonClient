@@ -118,16 +118,3 @@ def DownloadCaseResults(caseId, fileName):
                          Filename=fileName,
                          Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))
 
-def NewCase(meshId, config, caseName=None, tags=[],
-            priority='low', parentId=None):
-    if isinstance(config, str):
-        if not os.path.exists(config):
-            print('config file {0} does not Exist!'.format(config), flush=True)
-            raise FileDoesNotExist(config)
-        if caseName is None:
-            caseName = os.path.basename(config).split('.')[0]
-        config = json.load(open(config))
-    assert isinstance(config, dict)
-    assert caseName is not None
-    resp = SubmitCase(caseName, tags, meshId, priority, config, parentId)
-    return resp['caseId']

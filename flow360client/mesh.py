@@ -126,31 +126,3 @@ def UploadMesh(meshId, meshFile):
                          Callback = prog.report,
                          Config=config)
 
-def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
-            fmat=None, endianness=None):
-    if not os.path.exists(fname):
-        print('mesh file {0} does not Exist!'.format(fname), flush=True)
-        raise FileDoesNotExist(fname)
-    if meshName is None:
-        meshName = os.path.basename(fname).split('.')[0]
-    if fmat is None:
-        if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \
-           fname.endswith('.ugrid.bz2'):
-            fmat = 'aflr3'
-        else:
-            raise RuntimeError('Unknown format for file {}'.format(fname))
-    if endianness is None:
-        try:
-            if fname.find('.b8.') != -1:
-                endianness = 'big'
-            elif fname.find('.lb8.') != -1:
-                endianness = 'little'
-            else:
-                raise
-        except:
-            raise RuntimeError('Unknown endianness for file {}'.format(fname))
-    resp = AddMesh(meshName, noSlipWalls, tags, fmat, endianness)
-    meshId = resp['meshId']
-    UploadMesh(meshId, fname)
-    print()
-    return meshId
