@@ -41,7 +41,7 @@ Look for field of "status" from printed result. A case status can be: 1) queued;
 
 ## FAQ.
 
-### How do I view a case result?
+### How do I download or view a finished case result?
 ```
 >>>flow360.case.DownloadCaseResults('<case_id>', '/tmp/result.tar.gz')
 ```
@@ -62,12 +62,18 @@ Your AWS credential is encrypted and stored locally (if you hit Yes previously a
 For security, your password is stored as hashed value, so nobody can guess your password.
 
 ### How to check my mesh processing status?
+```
+## to list all your mesh files
+>>> flow360.mesh.ListMeshes()
+## to view one particular mesh
+>>> flow360.mesh.GetMeshInfo('<mesh_id>')
+```
 
-
-### How to check my case processing status?
-
-
-### How can I download my mesh file?
-
-
-### How can I download my case file?
+### How can I delete my mesh or case?
+```
+## Delete a mesh
+>>>flow360.mesh.DeleteMesh('<mesh_id>')
+## Delete a case
+>>> flow360.case.DeleteCase('<case_id>')
+```
+Caution: You won't be able to recover your deleted case or mesh files including its results after your deletion.
