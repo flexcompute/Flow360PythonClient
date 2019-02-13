@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/flexcompute/Flow360PythonClient.git flow360
 cd flow360
-python3 setyp.py install --user
+python3 setup.py install --user
 ```
 
 ## Step 2. Signing in with your account and password
