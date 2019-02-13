@@ -33,7 +33,7 @@ def translate_freestream(g):
         'betaAngle' : float(g['angle_of_yaw'])
     }
     if mach_number is not None:
-        freestream['Mach'] : float(mach_number)
+        freestream['Mach'] = float(mach_number)
     return freestream
 
 def translate_geometry(g):
