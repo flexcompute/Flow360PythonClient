@@ -1,9 +1,9 @@
 import os
 import json
-from flow360client.httputils import FileDoesNotExist
 import flow360client.mesh
 import flow360client.case
-
+from flow360client.httputils import FileDoesNotExist
+from flow360client.fun3d_to_flow360 import translate_boundaries
 from flow360client.httputils import FileDoesNotExist
 
 def NewCase(meshId, config, caseName=None, tags=[],
@@ -48,3 +48,13 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
     mesh.UploadMesh(meshId, fname)
     print()
     return meshId
+
+def noSlipWallsFromMapbc(mapbcFile):
+    assert mapbcFile.endswith('.mapbc') == True
+    if not os.path.exists(mapbcFile):
+        print('mapbc file {0} does not exist'.format(mapbcFile))
+        raise RuntimeError('FileNotFound')
+    with open(mapbcFile, 'r') as f:
+        mapbc = f.read()
+    bc, noslipWalls = translate_boundaries(mapbc)
+    return noslipWalls

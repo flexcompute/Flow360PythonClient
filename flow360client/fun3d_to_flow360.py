@@ -1,12 +1,6 @@
 import sys
 import json
 
-try:
-    fun3d_nml = open(sys.argv[1]).read()
-    mapbc = open(sys.argv[2]).read()
-except:
-    print("Usage: python3 fun3d_to_flow360.py fun3d.nml CASE_NAME.mapbc")
-    sys.exit(-1)
 
 def process_nml(nml):
     groups = {}
@@ -31,13 +25,16 @@ def process_nml(nml):
 
 def translate_freestream(g):
     assert eval(g['temperature_units']) == 'Kelvin'
-    return {
-        'Mach' : float(g['mach_number']),
+    mach_number = g.get('mach_number')
+    freestream = {
         'Reynolds' : float(g['reynolds_number']),
         'Temperature' : float(g['temperature']),
         'alphaAngle' : float(g['angle_of_attack']),
         'betaAngle' : float(g['angle_of_yaw'])
     }
+    if mach_number is not None:
+        freestream['Mach'] : float(mach_number)
+    return freestream
 
 def translate_geometry(g):
     return {
@@ -53,13 +50,10 @@ def translate_geometry(g):
 def translate_solver_params(g, **args):
     params = args
     args.update({
-        "tolerance" : 1E-10,
-        "linearIterations" : 30,
-        "kappaMUSCL" : -1.0,
         "maxSteps" : int(g['steps']),
         "CFL" : {
-            "initial" : 1.0,
-            "final" : 100.0,
+            "initial" : 10.0,
+            "final" : 200.0,
             "rampSteps" : 200
         }
     });
@@ -87,6 +81,7 @@ def translate_boundaries(mapbc):
     bc_map = {
         '4000': "NoSlipWall",
         '5000': "Freestream",
+        '5500': "Freestream",
         '6662': "SlipWall"
     }
     noslipWalls = []
@@ -100,9 +95,28 @@ def translate_boundaries(mapbc):
             noslipWalls.append(int(bc_num))
     return bc, noslipWalls
 
-bc, noslipWalls = translate_boundaries(mapbc)
-print(str(noslipWalls))
-nml = process_nml(fun3d_nml)
-flow360_json = translate_nml(nml)
-flow360_json['boundaries'] = bc
-json.dump(flow360_json, sys.stdout, indent=4, sort_keys=True)
+
+if __name__ == "__main__":
+    try:
+        try:
+            fun3d_nml = open(sys.argv[1]).read()
+        except Exception as e:
+            print('Could not read fun3d.nml file {0}!'.format(sys.argv[1]))
+            raise
+        try:
+            mapbc = open(sys.argv[2]).read()
+        except Exception as e:
+            print('Could not read .mapbc file {0}!'.format(sys.argv[2]))
+            raise
+        dest = sys.argv[3]
+        if dest.endswith('.json') != True:
+            print('Destination file must end with .json!')
+            raise RuntimeError('InvalidExtension')
+    except:
+        print("Error. Usage: python3 fun3d_to_flow360.py fun3d.nml CASE_NAME.mapbc dest/Flow360.json")
+        sys.exit(-1)
+    bc, noslipWalls = translate_boundaries(mapbc)
+    nml = process_nml(fun3d_nml)
+    flow360_json = translate_nml(nml)
+    flow360_json['boundaries'] = bc
+    json.dump(flow360_json, open(dest,'w+'), indent=4, sort_keys=True)
