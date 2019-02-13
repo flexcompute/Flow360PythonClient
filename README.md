@@ -9,6 +9,8 @@ pip3 install -r requirements.txt --user
 ```
 
 ## Step 2. Signing in with your account and password
+An account can be created at www.simulation.cloud/flow360  
+Accounts registered at www.simulation.cloud will NOT work.
 ```
 python3
 >>> import flow360
