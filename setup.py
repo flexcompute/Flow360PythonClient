@@ -7,6 +7,7 @@ setup(
     author='FlexCompute, Inc.',
     author_email='john@simulation.cloud',
     packages=['flow360client'],
-    install_requires=['requests', 'warrant',
-                      'aws-requests-auth', 'bcrypt', 'boto3']
+    install_requires=['requests', 'warrant==0.6.4',
+                      'aws-requests-auth', 'bcrypt', 'boto3'],
+    dependency_links=['http://github.com/flexcompute/warrant/tarball/master#egg=warrant-0.6.4']
 )
