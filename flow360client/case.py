@@ -96,7 +96,7 @@ def GetCaseTotalForces(caseId):
     return resp
 
 @refreshToken
-def GetCaseSurfaceForces(caseId, surfaceIds):
+def GetCaseSurfaceForces(caseId, surfaces):
     try:
         obj = s3Client.get_object(Bucket='flow360cases',
                                   Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'surface_forces.csv'))
@@ -109,7 +109,6 @@ def GetCaseSurfaceForces(caseId, surfaceIds):
         data = [[x for x in l.split(', ') if x] for l in d.split('\n')]
         ncol = len(data[0])
         nrow = len(data)
-        print(nrow, ncol)
         new = [[float(data[i][c]) for i in range(1,nrow) if len(data[i])] for c in range(0,ncol)]
         return (data[0], new)
 
@@ -129,15 +128,24 @@ def GetCaseSurfaceForces(caseId, surfaceIds):
 
 
     headers, forces = readCSV(data)
-    resp = []
-    for surfaceId in surfaceIds:
-        if int(surfaceId) <= (len(forces)-1)/24:
-            surfaceForces = assignCSVHeaders(headerKeys, forces, int(surfaceId)-1)
-            surfaceForces['numSteps'] = len(surfaceForces['steps'])
-            resp.append({'surfaceId' : surfaceId, 'forces' : surfaceForces})
-        else:
-            print('surfaceId={0} is out of range. Max surface id should be {1}'.format(surfaceId, int(len(forces)-1)/24-1))
-            raise RuntimeError('indexOutOfRange')
+    resp = {}
+    for surface in surfaces:
+        surfaceIds = surface['surfaceIds']
+        surfaceName = surface['surfaceName']
+        allSurfaceForces = {}
+        for headerKey in headerKeys:
+            allSurfaceForces[headerKey] = [0]*len(forces[0])
+
+        for surfaceId in surfaceIds:
+            if int(surfaceId) <= (len(forces)-1)/24:
+                surfaceForces = assignCSVHeaders(headerKeys, forces, int(surfaceId)-1)
+                for headerKey in headerKeys[1:]:
+                    allSurfaceForces[headerKey] = [i + j for i, j in zip(allSurfaceForces[headerKey], surfaceForces[headerKey])]
+                allSurfaceForces['steps'] = surfaceForces['steps']
+            else:
+                print('surfaceId={0} is out of range. Max surface id should be {1}'.format(surfaceId, int(len(forces)-1)/24-1))
+                raise RuntimeError('indexOutOfRange')
+        resp[surfaceName] = allSurfaceForces
 
     return resp
 
