@@ -83,7 +83,7 @@ def getAPIAuthentication(creds):
                            aws_service='execute-api')
 
     keys = requests.post('https://nfbi4wgyr9.execute-api.us-east-1.amazonaws.com/beta1/get-access', auth=auth,
-                         body=json.dumps({'email' : email})).json()
+                         data=json.dumps({'email' : email})).json()
 
     if keys['NewKeys']:
         sleepDur = 15
