@@ -1,7 +1,7 @@
 # Runbook
 
 ## Step 1. Download python client and install
-
+Make sure you have setuptools. If not, sudo apt-get install python3-setuptools
 ```
 git clone https://github.com/flexcompute/Flow360PythonClient.git flow360
 cd flow360
@@ -9,8 +9,7 @@ python3 setup.py install --user
 ```
 
 ## Step 2. Signing in with your account and password
-An account can be created at www.simulation.cloud/flow360  
-Accounts registered at www.simulation.cloud will NOT work.
+An account can be created at www.flexcompute.com
 ```
 python3
 >>> import flow360client
