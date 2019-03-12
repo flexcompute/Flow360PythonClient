@@ -81,7 +81,7 @@ def translate_boundaries(mapbc):
     bc_map = {
         '4000': "NoSlipWall",
         '5000': "Freestream",
-        '5500': "Freestream",
+        '5050': "Freestream",
         '6662': "SlipWall"
     }
     noslipWalls = []
