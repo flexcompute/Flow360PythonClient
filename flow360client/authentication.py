@@ -1,8 +1,6 @@
 import boto3
-import time
-import requests
 import getpass
-import json
+from flow360client.httputils import get, flow360url
 import hashlib
 import os
 import functools
@@ -10,8 +8,6 @@ from aws_requests_auth.aws_auth import AWSRequestsAuth
 
 boto3.setup_default_session(region_name='us-east-1')
 
-from warrant import Cognito
-from warrant.aws_srp import AWSSRP
 
 def getEmailPasswd():
     flow360dir = os.path.expanduser('~/.flow360')
@@ -44,51 +40,16 @@ email, password = getEmailPasswd()
 tokenRefreshTime = None
 tokenDuration = 3500.
 
+
 def email2username(email):
-    return email.replace('@','-at-')
+    return email.replace('@', '-at-')
 
 
-def getCredentials():
-    username = email2username(email)
-    u = Cognito('us-east-1_Csq1uNAO3','scepvluho5eeehv297pvdunk5',
-                username=username,
-                access_key='AKIAIOSFODNN7EXAMPLE',
-                secret_key='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY')
+def getAPIAuthentication():
+    url = '{0}/{1}'.format(flow360url, 'get-access')
+    auth = (email, password)
 
-    u.authenticate(password=password)
-
-    client = boto3.client('cognito-identity',
-                          region_name='us-east-1')
-
-    login = {'cognito-idp.us-east-1.amazonaws.com/us-east-1_Csq1uNAO3' : u.id_token}
-
-    resp =  client.get_id(AccountId='625554095313',
-                          IdentityPoolId='us-east-1:68a3cf31-60fc-4def-8db2-4c3d48070756',
-                          Logins=login)
-
-    creds = client.get_credentials_for_identity(IdentityId=resp['IdentityId'],
-                                                Logins=login)
-    global tokenRefreshTime
-    tokenRefreshTime = time.time()
-    return creds
-
-def getAPIAuthentication(creds):
-    creds = getCredentials()
-
-    auth = AWSRequestsAuth(aws_access_key=creds['Credentials']['AccessKeyId'],
-                           aws_secret_access_key=creds['Credentials']['SecretKey'],
-                           aws_token = creds['Credentials']['SessionToken'],
-                           aws_host='nfbi4wgyr9.execute-api.us-east-1.amazonaws.com',
-                           aws_region='us-east-1',
-                           aws_service='execute-api')
-
-    keys = requests.post('https://nfbi4wgyr9.execute-api.us-east-1.amazonaws.com/beta1/get-access', auth=auth,
-                         data=json.dumps({'email' : email})).json()
-
-    if keys['NewKeys']:
-        sleepDur = 15
-        print('Waiting {0}s for new keys to propagate...'.format(sleepDur))
-        time.sleep(sleepDur)
+    keys = get(url, auth=auth)
 
     auth = AWSRequestsAuth(aws_access_key=keys['UserAccessKey'],
                            aws_secret_access_key=keys['UserSecretAccessKey'],
@@ -98,14 +59,15 @@ def getAPIAuthentication(creds):
 
     return auth, keys
 
-auth, keys = getAPIAuthentication(getCredentials())
+
+auth, keys = getAPIAuthentication()
+
 
 def refreshToken(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         global creds
         global auth
-        #auth = getAPIAuthentication(None)
         resp = func(*args, **kwargs)
         return resp
     return wrapper

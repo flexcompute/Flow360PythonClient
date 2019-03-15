@@ -1,12 +1,7 @@
-import boto3
-import time
-import requests
-import os
 import json
-import sys
 from .authentication import auth, keys, refreshToken
-from .httputils import post, get, delete, s3Client, flow360url
-from .httputils import FileDoesNotExist
+from .httputils import post, get, delete, flow360url
+from .s3utils import s3Client
 
 @refreshToken
 def SubmitCase(name, tags, meshId, priority, config, parentId=None):

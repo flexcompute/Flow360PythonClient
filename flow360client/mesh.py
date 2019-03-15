@@ -1,12 +1,10 @@
-import boto3
-import time
-import requests
 import os
 import json
 import sys
 from boto3.s3.transfer import TransferConfig
 from .authentication import auth, keys, refreshToken
-from .httputils import post, get, delete, s3Client
+from .httputils import post, get, delete
+from .s3utils import s3Client
 from .httputils import FileDoesNotExist, flow360url
 
 @refreshToken
@@ -115,9 +113,6 @@ def UploadMesh(meshId, meshFile):
 
     fileSize = os.path.getsize(meshFile)
     prog = UploadProgress(fileSize)
-    config = TransferConfig()
-    #config = TransferConfig(multipart_chunksize=33554432,
-    #                        max_concurrency=100)
     config = TransferConfig(max_concurrency=100)
 
     s3Client.upload_file(Bucket='flow360meshes',
