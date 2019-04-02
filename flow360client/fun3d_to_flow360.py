@@ -82,7 +82,12 @@ def translate_boundaries(mapbc):
         '4000': "NoSlipWall",
         '5000': "Freestream",
         '5050': "Freestream",
-        '6662': "SlipWall"
+        '5051' : "SubsonicOutflowPressure",
+        '5052' : "SubsonicOutflowMach",
+        '6662': "SlipWall",
+        '7012' : "SubsonicOutflowPressure",
+        '7031' : "MassOutflow",
+        '7036' : "MassInflow"
     }
     noslipWalls = []
     for line in mapbc:
