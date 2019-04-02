@@ -85,6 +85,7 @@ def translate_boundaries(mapbc):
         '5051' : "SubsonicOutflowPressure",
         '5052' : "SubsonicOutflowMach",
         '6662': "SlipWall",
+        '7011' : "SubsonicInflow",
         '7012' : "SubsonicOutflowPressure",
         '7031' : "MassOutflow",
         '7036' : "MassInflow"
