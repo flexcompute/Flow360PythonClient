@@ -79,6 +79,7 @@ def translate_boundaries(mapbc):
     assert len(mapbc) == num_bc
     bc = {}
     bc_map = {
+        '3000': "SlipWall",
         '4000': "NoSlipWall",
         '5000': "Freestream",
         '5050': "Freestream",
