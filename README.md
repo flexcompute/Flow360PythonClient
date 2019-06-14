@@ -31,6 +31,12 @@ Replace above fname and noSlipWalls with your own file path and parameter.
 Parameter inputs of mesh name and tags are optional.
 Upon this command finishing, it will return the mesh Id '<mesh_id>'. Use that for next step.
 
+Note:
+By default, submited mesh file will be processed using latest production solver. If you want to select historical solver version, please specify in the argument as example:
+```
+>>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'], solverVersion='release-0.1')
+```
+
 ## Step 4. Upload a case file
 First, prepare a JSON input file, either manually or by using the fun3d_to_flow360.py script:
 ```
