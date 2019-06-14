@@ -1,4 +1,4 @@
-# Runbook
+# Getting Started
 
 ## Step 1. Download python client and install
 Make sure you have setuptools. If not, sudo apt-get install python3-setuptools
@@ -95,3 +95,12 @@ For security, your password is stored as hashed value, so nobody can guess your 
 >>> flow360client.case.DeleteCase('<case_id>')
 ```
 Caution: You won't be able to recover your deleted case or mesh files including its results after your deletion.
+
+# Version history
+## release-0.1
+* Viscous gradient scheme changed from node-based Green-Gauss gradients to a Least-squares gradient scheme
+* Improved both pressure and velocity limiters to help with supersonic and transonic cases.
+
+## release-0.2
+* Minor modifications to enhance convergence
+
