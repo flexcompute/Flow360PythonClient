@@ -34,7 +34,7 @@ Upon this command finishing, it will return the mesh Id '<mesh_id>'. Use that fo
 Note:
 By default, submited mesh file will be processed using latest production solver. If you want to select historical solver version, please specify in the argument as example:
 ```
->>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'], solverVersion='release-0.1')
+>>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'], solverVersion='release-0.2.0')
 ```
 
 ## Step 4. Upload a case file
@@ -101,6 +101,6 @@ Caution: You won't be able to recover your deleted case or mesh files including 
 * Viscous gradient scheme changed from node-based Green-Gauss gradients to a Least-squares gradient scheme
 * Improved both pressure and velocity limiters to help with supersonic and transonic cases.
 
-## release-0.2
+## release-0.2.0
 * Minor modifications to enhance convergence
 
