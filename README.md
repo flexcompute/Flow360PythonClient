@@ -107,6 +107,6 @@ Caution: You won't be able to recover your deleted case or mesh files including 
 ## beta
 * Implemented incremental back-off in solution update
 * Replaced the pressure/density limiters which were edge-based with node-based limiters.
-* Improved the stability properies of the solution gradient used for the viscous fluxes. 
-* Now using a blending of corrected and uncorrected viscous scheme. This effectively limits how much the corrected viscous scheme can differ from the uncorrected scheme. This is necessary because the Jacobian only inludes contributions from the uncorrected scheme. 
+* Improved the stability properties of the solution gradient used for the viscous fluxes. 
+* Now using a blending of corrected and uncorrected viscous scheme. This effectively limits how much the corrected viscous scheme can differ from the uncorrected scheme. This is necessary because the Jacobian only includes contributions from the uncorrected scheme. 
 * Bug fix for supersonic farfield boundary condition. 
