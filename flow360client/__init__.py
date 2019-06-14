@@ -21,7 +21,7 @@ def NewCase(meshId, config, caseName=None, tags=[],
     return resp['caseId']
 
 def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
-            fmat=None, endianness=None):
+            fmat=None, endianness=None, solverVersion=None):
     if not os.path.exists(fname):
         print('mesh file {0} does not Exist!'.format(fname), flush=True)
         raise FileDoesNotExist(fname)
@@ -43,7 +43,7 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
                 raise
         except:
             raise RuntimeError('Unknown endianness for file {}'.format(fname))
-    resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness)
+    resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness, solverVersion)
     meshId = resp['meshId']
     mesh.UploadMesh(meshId, fname)
     print()

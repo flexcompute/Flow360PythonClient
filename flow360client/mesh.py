@@ -8,9 +8,9 @@ from .s3utils import s3Client
 from .httputils import FileDoesNotExist, flow360url
 
 @refreshToken
-def AddMesh(name, noSlipWalls, tags, fmat, endianness):
+def AddMesh(name, noSlipWalls, tags, fmat, endianness, solver_version):
     '''
-    AddMesh(name, noSlipWalls, tags, fmat, endianness)
+    AddMesh(name, noSlipWalls, tags, fmat, endianness, version)
     returns the raw HTTP response
     {
         'meshId' : 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
@@ -28,6 +28,9 @@ def AddMesh(name, noSlipWalls, tags, fmat, endianness):
         "endianness" : endianness,
         "noSlipWalls" : noSlipWalls,
     }
+
+    if solver_version:
+        body['solver_version'] = solver_version
     
     url = flow360url + '/add-mesh'
 
