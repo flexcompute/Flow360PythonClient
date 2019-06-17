@@ -44,7 +44,7 @@ def translate_geometry(g):
                           float(g['z_moment_center'])],
         "momentLength" : [float(g['x_moment_length']),
                           float(g['y_moment_length']),
-                          float(g['z_moment_length'])]
+                          float(g['x_moment_length'])]
     }
 
 def translate_solver_params(g, **args):
