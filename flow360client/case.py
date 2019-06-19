@@ -154,7 +154,7 @@ def DownloadCaseResults(caseId, fileName):
                          Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))
 
 @refreshToken
-def DownloadMeshProc(meshId):
-    s3Client.download_file(Bucket='flow360meshes',
-                         Filename='meshproc.out',
-                         Key='users/{0}/{1}/info/{2}'.format(keys['UserId'], meshId, 'meshproc.out'))
+def DownloadSolverOut(caseId):
+    s3Client.download_file(Bucket='flow360cases',
+                           Filename='solver.out',
+                           Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'solver.out'))
