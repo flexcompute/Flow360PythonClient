@@ -110,3 +110,6 @@ Caution: You won't be able to recover your deleted case or mesh files including 
 * Improved the stability properties of the solution gradient used for the viscous fluxes. 
 * Now using a blending of corrected and uncorrected viscous scheme. This effectively limits how much the corrected viscous scheme can differ from the uncorrected scheme. This is necessary because the Jacobian only includes contributions from the uncorrected scheme. 
 * Bug fix for supersonic farfield boundary condition. 
+
+# Contact Support
+* zongfu@flexcompute.com
