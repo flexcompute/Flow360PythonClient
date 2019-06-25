@@ -47,30 +47,62 @@ def translate_geometry(g):
                           float(g['x_moment_length'])]
     }
 
-def translate_solver_params(g, **args):
+def translate_navier_stokes(rc, nl, **args):
     params = args
-    args.update({
-        "maxSteps" : int(g['steps']),
-        "CFL" : {
-            "initial" : 10.0,
-            "final" : 200.0,
-            "rampSteps" : 200
-        }
-    });
+    CFL = {}
+    for key, value in nl.items():
+        if key.find('schedule_iteration') != -1:
+            CFL['rampSteps'] = int(value.split()[1].strip()) - int(value.split()[0].strip(','))
+        if key.find('schedule_cfl') != -1 and key.find('schedule_cflturb') == -1:
+            CFL['initial'] = float(value.split()[0].strip(','))
+            CFL['final'] = float(value.split()[1])
+
+    args.update({"maxSteps" : int(rc['steps'])})
+    if CFL:
+        args.update({
+            "CFL" : CFL
+        });
+    return args
+
+def translate_turbulence(nl, **args):
+    params = args
+    CFL = {}
+    for key, value in nl.items():
+        if key.find('schedule_iteration') != -1:
+            CFL['rampSteps'] = int(value.split()[1]) - int(value.split()[0].strip(','))
+        if key.find('schedule_cflturb') != -1:
+            CFL['initial'] = float(value.split()[0].strip(','))
+            CFL['final'] = float(value.split()[1])
+    if CFL:
+        args.update({
+            "CFL" : CFL
+        });
+    return args
+
+def translate_inviscid_flux(invf, **args):
+    foi = invf.get('first_order_iterations')
+    if foi:
+        args.update({'firstOrderIterations' : int(foi)})
     return args
 
 def translate_nml(nml):
-    return {
-        'freestream' :
-            translate_freestream(nml['reference_physical_properties']),
-        'geometry' :
-            translate_geometry(nml['force_moment_integ_properties']),
-        'navierStokesSolver' :
-            translate_solver_params(nml['code_run_control']),
-        'turbulenceModelSolver' :
-            translate_solver_params(nml['code_run_control'],
-                                    modelType='SpalartAllmaras'),
-    }
+    dc = {}
+    if nml.get('reference_physical_properties'):
+        dc['freestream'] = translate_freestream(nml['reference_physical_properties'])
+
+    if nml.get('force_moment_integ_properties'):
+        dc['geometry'] = translate_geometry(nml['force_moment_integ_properties'])
+
+    if nml.get('nonlinear_solver_parameters'):
+        dc['navierStokesSolver'] = translate_navier_stokes(nml['code_run_control'],
+                                                           nml['nonlinear_solver_parameters'])
+        dc['turbulenceModelSolver'] = translate_turbulence(nml['nonlinear_solver_parameters'],
+                                                           modelType='SpalartAllmaras')
+    if nml.get('inviscid_flux_method'):
+        rc = translate_inviscid_flux(nml['inviscid_flux_method'])
+        if rc:
+            dc['runControl'] = rc
+    return dc
 
 def translate_boundaries(mapbc):
     mapbc = mapbc.strip().splitlines()
