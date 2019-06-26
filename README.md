@@ -96,86 +96,92 @@ For security, your password is stored as hashed value, so nobody can guess your 
 ```
 Caution: You won't be able to recover your deleted case or mesh files including its results after your deletion.
 
-# Current Solver Input Options
+# Current Solver Input Options and Default Values
+Caution: comments are not allowed to be submitted with the solver input. 
     {
-        "runControl" :
-        {
-            "restart" : 0
-        },
         "geometry" :
         {
-            "meshName" : "mesh.lb8.ugrid",
-            "endianness" : "little",
-            "refArea" : 1.0,
-            "momentCenter" : [0.0, 0.0, 0.0],
-            "momentLength" : [1.0, 1.0, 1.0]
+            "meshName" : "mesh.lb8.ugrid", // not necessary
+            "endianness" : "little", // not necessary
+            "refArea" : 1.0, // Reference area, in grid units
+            "momentCenter" : [0.0, 0.0, 0.0], // x,y,z moment center
+            "momentLength" : [1.0, 1.0, 1.0] // y,y,z moment reference lengths
         },
         "runControl" :
         {
-           "restart" : false,
-           "firstOrderIterations" : -1,
-           "startControl" : -1
+           "restart" : false, // restart not currently supported
+           "firstOrderIterations" : -1, // number of iterations to perform before turning on second order accuracy
+           "startControl" : -1 // Time step at which to start targetCL control. -1 is no trim control.
+           "targetCL" : 0.0 // The desired trim CL to achieve
         },
         "navierStokesSolver" : {
-            "tolerance" : 1e-10,
-            "maxSteps" : 10000,
-            "CFL": {
+            "tolerance" : 1e-10, // Tolerance for the NS residual, below which the solver exits
+            "maxSteps" : 10000, // Maximum number ot time steps
+            "CFL": { // Exponential CFL ramping, from initial to final, over _rampSteps_ steps
                 "initial" : 10.0,
                 "final" : 200.0,
                 "rampSteps" : 200
             },
-            "linearIterations" : 25,
-            "kappaMUSCL" : 0.3333333333333
-            "maxDt" : 1.0e100,
-            "startEnforcingMaxDtStep" : -1,
-            "updateJacobianFrequency" : 4,
-            "viscousWaveSpeedScale" : 0.0
+            "linearIterations" : 25, // Number of iterations for the linear solver to perform
+            "kappaMUSCL" : 0.3333333333333 // kappa for the MUSCL scheme, range from [-1, 1], with 1 being unstable.
+            "maxDt" : 1.0e100, // Maximum time step
+            "startEnforcingMaxDtStep" : -1, // time step at which to start enforcing maxDtStep. Default of -1 does not enforce a max time step.
+            "updateJacobianFrequency" : 4, // Frequency at which the jacobian is updated.
+            "viscousWaveSpeedScale" : 0.0 // Scales the wave speed acording to a viscous flux. 0.0 is no speed correction, with larger values providing a larger viscous wave speed correction.
         },
         "turbulenceModelSolver" : {
-           "modelType" : "SpalartAllmaras",
-            "tolerance" : 1e-8,
-            "CFL" : {
+           "modelType" : "SpalartAllmaras", // Only SA supported at this point
+            "CFL" : { // Exponential CFL ramping, from initial to final, over _rampSteps_ steps
                 "initial" : 10,
                 "final" : 200,
                 "rampSteps" : 200
             },
-            "linearIterations" : 15,
-            "kappaMUSCL" : -1.0,
-            "rotationCorrection" : false,
-            "DDES" : false
+            "linearIterations" : 15, // Number of linear iterations for the SA linear system
+            "kappaMUSCL" : -1.0, // kappa for the muscle scheme, range from [-1, 1] with 1 being unstable.
+            "rotationCorrection" : false, // SARC model
+            "DDES" : false // _true_ Enables DDES simulation
         },
         "freestream" :
         {
-            "Reynolds" : 10000.0,
-            "Mach" : 0.3,
-            "Temperature" : 288.15,
-            "alphaAngle" : 0.0,
-            "betaAngle" : 0.0
+            "Reynolds" : 10000.0, // Reynolds number = Re_physical/ref_length_in_grid_units
+            "Mach" : 0.3, // Mach number
+            "Temperature" : 288.15, // Temperature in Kelvin
+            "alphaAngle" : 0.0, // angle of attack
+            "betaAngle" : 0.0 // side slip angle
         },
         "volumeOutput" : {
-            "primitiveVars" : true,
-            "vorticity" : false,
-            "residualNavierStokes" : false,
-            "residualTurbulence" : false,
-            "T" : false,
-            "s" : false,
-            "Cp" : true,
-            "mut" : true,
-            "mutRatio" : false,
-            "Mach" : true,
-            "gradW" : false
+            "primitiveVars" : true, // outputs rho, u, v, w, p
+            "vorticity" : false, // vorticity
+            "residualNavierStokes" : false, // 5 components of the N-S residual
+            "residualTurbulence" : false, // nuHat
+            "T" : false, // Temperature
+            "s" : false, // entropy
+            "Cp" : true, // Coefficient of pressure
+            "mut" : true, // turbulent viscosity
+            "mutRatio" : false, // mut/mu_inf
+            "Mach" : true, // Mach number
         },
         "surfaceOutput" : {
-            "primitiveVars" : true,
-            "Cp" : true,
-            "Cf" : true,
-            "CfVec" : true,
-            "yPlus" : true,
-            "wallDistance" : false,
-            "Mach" : true
+            "primitiveVars" : true, // rho, u, v, w, p
+            "Cp" : true, // Cefficient of pressure
+            "Cf" : true, // Skin friction coefficient
+            "yPlus" : true, // y+
+            "wallDistance" : false, // wall Distance
+            "Mach" : false // Mach number
         },
         "boundaries" :
         {
+            // List of boundary conditions. e.g.
+            "1" : {
+                "type" : "NoSlipWall"
+            },
+            "2" : {
+                "type" : "SlipWall"
+            },
+            "3" : {
+                "type" : "Freestream"
+            }
+        }
     }
 
 # Version history
