@@ -166,6 +166,7 @@ Caution: comments are not allowed to be submitted with the solver input.
             "primitiveVars" : true, # rho, u, v, w, p
             "Cp" : true, # Cefficient of pressure
             "Cf" : true, # Skin friction coefficient
+            "CfVec" : false, # Viscous stress coefficient vector
             "yPlus" : true, # y+
             "wallDistance" : false, # wall Distance
             "Mach" : false # Mach number
