@@ -96,6 +96,88 @@ For security, your password is stored as hashed value, so nobody can guess your 
 ```
 Caution: You won't be able to recover your deleted case or mesh files including its results after your deletion.
 
+# Current Solver Input Options
+    {
+        "runControl" :
+        {
+            "restart" : 0
+        },
+        "geometry" :
+        {
+            "meshName" : "mesh.lb8.ugrid",
+            "endianness" : "little",
+            "refArea" : 1.0,
+            "momentCenter" : [0.0, 0.0, 0.0],
+            "momentLength" : [1.0, 1.0, 1.0]
+        },
+        "runControl" :
+        {
+           "restart" : false,
+           "firstOrderIterations" : -1,
+           "startControl" : -1
+        },
+        "navierStokesSolver" : {
+            "tolerance" : 1e-10,
+            "maxSteps" : 10000,
+            "CFL": {
+                "initial" : 10.0,
+                "final" : 200.0,
+                "rampSteps" : 200
+            },
+            "linearIterations" : 25,
+            "kappaMUSCL" : 0.3333333333333
+            "maxDt" : 1.0e100,
+            "startEnforcingMaxDtStep" : -1,
+            "updateJacobianFrequency" : 4,
+            "viscousWaveSpeedScale" : 0.0
+        },
+        "turbulenceModelSolver" : {
+           "modelType" : "SpalartAllmaras",
+            "tolerance" : 1e-8,
+            "CFL" : {
+                "initial" : 10,
+                "final" : 200,
+                "rampSteps" : 200
+            },
+            "linearIterations" : 15,
+            "kappaMUSCL" : -1.0,
+            "rotationCorrection" : false,
+            "DDES" : false
+        },
+        "freestream" :
+        {
+            "Reynolds" : 10000.0,
+            "Mach" : 0.3,
+            "Temperature" : 288.15,
+            "alphaAngle" : 0.0,
+            "betaAngle" : 0.0
+        },
+        "volumeOutput" : {
+            "primitiveVars" : true,
+            "vorticity" : false,
+            "residualNavierStokes" : false,
+            "residualTurbulence" : false,
+            "T" : false,
+            "s" : false,
+            "Cp" : true,
+            "mut" : true,
+            "mutRatio" : false,
+            "Mach" : true,
+            "gradW" : false
+        },
+        "surfaceOutput" : {
+            "primitiveVars" : true,
+            "Cp" : true,
+            "Cf" : true,
+            "CfVec" : true,
+            "yPlus" : true,
+            "wallDistance" : false,
+            "Mach" : true
+        },
+        "boundaries" :
+        {
+    }
+
 # Version history
 ## release-0.1
 * Viscous gradient scheme changed from node-based Green-Gauss gradients to a Least-squares gradient scheme
