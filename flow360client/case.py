@@ -144,14 +144,28 @@ def GetCaseSurfaceForces(caseId, surfaces):
 
     return resp
 
+
 @refreshToken
-def DownloadCaseResults(caseId, fileName):
+def DownloadVolumetricResults(caseId, fileName):
     if fileName[-7:] != '.tar.gz':
         print('fileName must have extension .tar.gz!')
         return
     s3Client.download_file(Bucket='flow360cases',
                          Filename=fileName,
                          Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))
+
+@refreshToken
+def DownloadSurfaceResults(caseId, fileName):
+    if fileName[-7:] != '.tar.gz':
+        print('fileName must have extension .tar.gz!')
+        return
+    s3Client.download_file(Bucket='flow360cases',
+                         Filename=fileName,
+                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'surfaces.tar.gz'))
+
+@refreshToken
+def DownloadCaseResults(caseId, fileName):
+    DownloadVolumetricResults(caseId, fileName)
 
 @refreshToken
 def DownloadSolverOut(caseId):
