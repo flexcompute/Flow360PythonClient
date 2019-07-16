@@ -60,7 +60,7 @@ Look for field of "status" from printed result. A case status can be: 1) queued;
 ## FAQ.
 
 ### How do I download or view a finished case result?
-To download the surface data (surface distributions and slies):
+To download the surface data (surface distributions and slices):
 ```
 >>>flow360client.case.DownloadSurfaceResults('<case_id>', '/tmp/surfaces.tar.gz')
 ```
