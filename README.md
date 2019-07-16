@@ -60,10 +60,16 @@ Look for field of "status" from printed result. A case status can be: 1) queued;
 ## FAQ.
 
 ### How do I download or view a finished case result?
+To download the surface data (surface distributions and slies):
 ```
->>>flow360client.case.DownloadCaseResults('<case_id>', '/tmp/result.tar.gz')
+>>>flow360client.case.DownloadSurfaceResults('<case_id>', '/tmp/surfaces.tar.gz')
 ```
 Replace the second parameter with your target location and output file name, ending with '.tar.gz'.
+
+To download the entire flowfield:
+```
+>>>flow360client.case.DownloadVolumetricResults('<case_id>', '/tmp/volume.tar.gz')
+```
 
 ### My case is still running, but how can I check current residual or surface force result?
 ```
@@ -166,7 +172,7 @@ Caution: comments are not allowed to be submitted with the solver input.
         "surfaceOutput" : {
             "outputFormat" : "paraview", # "paraview" || "tecplot"
             "primitiveVars" : true, # rho, u, v, w, p
-            "Cp" : true, # Cefficient of pressure
+            "Cp" : true, # Coefficient of pressure
             "Cf" : true, # Skin friction coefficient
             "CfVec" : true, # Viscous stress coefficient vector
             "yPlus" : true, # y+
@@ -174,11 +180,19 @@ Caution: comments are not allowed to be submitted with the solver input.
             "Mach" : false # Mach number
         },
         "sliceOutput" : {        
-            "outputFormat" : "paraview", # "paraview" || "tecplot"                    
+            "outputFormat" : "paraview", # "paraview" || "tecplot"
+            "primitiveVars" : true, # outputs rho, u, v, w, p
+            "vorticity" : false, # vorticity
+            "T" : false, # Temperature
+            "s" : false, # entropy
+            "Cp" : true, # Coefficient of pressure
+            "mut" : true, # turbulent viscosity
+            "mutRatio" : false, # mut/mu_inf
+            "Mach" : true, # Mach number
             "slices" : [  # list of slices to save after the solver has finished
               {                  
                 "sliceName" : "slice_1", # Name of the first slice
-                "sliceNormal" : [0.0, 0.0, 1.0], # Normal vector of the first slice
+                "sliceNormal" : [0.0, 1.0, 0.0], # Normal vector of the first slice
                 "sliceOrigin" : [0.0, 0.0, 0.0] # Origin of the first slice
               }
             ]                 
