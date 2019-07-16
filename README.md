@@ -60,10 +60,16 @@ Look for field of "status" from printed result. A case status can be: 1) queued;
 ## FAQ.
 
 ### How do I download or view a finished case result?
+To download the surface data (surface distributions and slies):
 ```
->>>flow360client.case.DownloadCaseResults('<case_id>', '/tmp/result.tar.gz')
+>>>flow360client.case.DownloadSurfaceResults('<case_id>', '/tmp/surfaces.tar.gz')
 ```
 Replace the second parameter with your target location and output file name, ending with '.tar.gz'.
+
+To download the entire flowfield:
+```
+>>>flow360client.case.DownloadVolumetricResults('<case_id>', '/tmp/volume.tar.gz')
+```
 
 ### My case is still running, but how can I check current residual or surface force result?
 ```
@@ -151,6 +157,7 @@ Caution: comments are not allowed to be submitted with the solver input.
             "betaAngle" : 0.0 # side slip angle
         },
         "volumeOutput" : {
+            "outputFormat" : "paraview", # "paraview" || "tecplot"
             "primitiveVars" : true, # outputs rho, u, v, w, p
             "vorticity" : false, # vorticity
             "residualNavierStokes" : false, # 5 components of the N-S residual
@@ -163,14 +170,33 @@ Caution: comments are not allowed to be submitted with the solver input.
             "Mach" : true, # Mach number
         },
         "surfaceOutput" : {
+            "outputFormat" : "paraview", # "paraview" || "tecplot"
             "primitiveVars" : true, # rho, u, v, w, p
-            "Cp" : true, # Cefficient of pressure
+            "Cp" : true, # Coefficient of pressure
             "Cf" : true, # Skin friction coefficient
             "CfVec" : true, # Viscous stress coefficient vector
             "yPlus" : true, # y+
             "wallDistance" : false, # wall Distance
             "Mach" : false # Mach number
         },
+        "sliceOutput" : {        
+            "outputFormat" : "paraview", # "paraview" || "tecplot"
+            "primitiveVars" : true, # outputs rho, u, v, w, p
+            "vorticity" : false, # vorticity
+            "T" : false, # Temperature
+            "s" : false, # entropy
+            "Cp" : true, # Coefficient of pressure
+            "mut" : true, # turbulent viscosity
+            "mutRatio" : false, # mut/mu_inf
+            "Mach" : true, # Mach number
+            "slices" : [  # list of slices to save after the solver has finished
+              {                  
+                "sliceName" : "slice_1", # Name of the first slice
+                "sliceNormal" : [0.0, 1.0, 0.0], # Normal vector of the first slice
+                "sliceOrigin" : [0.0, 0.0, 0.0] # Origin of the first slice
+              }
+            ]                 
+        },   
         "boundaries" :
         {
             # List of boundary conditions. e.g.
@@ -187,12 +213,18 @@ Caution: comments are not allowed to be submitted with the solver input.
     }
 
 # Version history
+Results between major versions (e.g. x.y.0) may differ slightly. However, results among minor versions (e.g. 0.2.x) will not change.
+
 ## release-0.1
 * Viscous gradient scheme changed from node-based Green-Gauss gradients to a Least-squares gradient scheme
 * Improved both pressure and velocity limiters to help with supersonic and transonic cases.
 
 ## release-0.2.0
 * Minor modifications to enhance convergence
+
+## release-0.2.1
+* Added support for tecplot .szplt output
+* Added support for slicing of the final flowfield
 
 ## beta
 * Implemented incremental back-off in solution update
@@ -202,4 +234,4 @@ Caution: comments are not allowed to be submitted with the solver input.
 * Bug fix for supersonic farfield boundary condition. 
 
 # Contact Support
-* zongfu@flexcompute.com
+* john@flexcompute.com
