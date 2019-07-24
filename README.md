@@ -167,7 +167,7 @@ Caution: comments are not allowed to be submitted with the solver input.
             "Cp" : true, # Coefficient of pressure
             "mut" : true, # turbulent viscosity
             "mutRatio" : false, # mut/mu_inf
-            "Mach" : true, # Mach number
+            "Mach" : true # Mach number
         },
         "surfaceOutput" : {
             "outputFormat" : "paraview", # "paraview" || "tecplot"
