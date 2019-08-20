@@ -117,6 +117,7 @@ Caution: comments are not allowed to be submitted with the solver input.
         "runControl" :
         {
            "restart" : false, # restart not currently supported
+           "maxSte's : 10000, # the maximum number of total steps, including parent case steps
            "firstOrderIterations" : -1, # number of iterations to perform before turning on second order accuracy
            "startControl" : -1 # Time step at which to start targetCL control. -1 is no trim control.
            "targetCL" : 0.0 # The desired trim CL to achieve
@@ -226,12 +227,14 @@ Results between major versions (e.g. x.y.0) may differ slightly. However, result
 * Added support for tecplot .szplt output
 * Added support for slicing of the final flowfield
 
-## beta
+## release-0.3.0
 * Implemented incremental back-off in solution update
 * Replaced the pressure/density limiters which were edge-based with node-based limiters.
 * Improved the stability properties of the solution gradient used for the viscous fluxes. 
 * Now using a blending of corrected and uncorrected viscous scheme. This effectively limits how much the corrected viscous scheme can differ from the uncorrected scheme. This is necessary because the Jacobian only includes contributions from the uncorrected scheme. 
 * Bug fix for supersonic farfield boundary condition. 
+* Tecplot output and single-file surface and slice output
+* Re-start capability using a "parent" case. 
 
 # Contact Support
 * john@flexcompute.com
