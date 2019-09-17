@@ -117,7 +117,7 @@ Caution: comments are not allowed to be submitted with the solver input.
         "runControl" :
         {
            "restart" : false, # restart not currently supported
-           "maxSte's : 10000, # the maximum number of total steps, including parent case steps
+           "maxSteps : 10000, # the maximum number of total steps, including parent case steps
            "firstOrderIterations" : -1, # number of iterations to perform before turning on second order accuracy
            "startControl" : -1 # Time step at which to start targetCL control. -1 is no trim control.
            "targetCL" : 0.0 # The desired trim CL to achieve
