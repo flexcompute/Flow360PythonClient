@@ -79,10 +79,14 @@ def translate_turbulence(nl, **args):
         });
     return args
 
-def translate_inviscid_flux(invf, **args):
-    foi = invf.get('first_order_iterations')
-    if foi:
-        args.update({'firstOrderIterations' : int(foi)})
+def translate_inviscid_flux(rc, invf, **args):
+    if invf:
+        foi = invf.get('first_order_iterations')
+        if foi:
+            args.update({'firstOrderIterations' : int(foi)})
+
+    args.update({"maxSteps" : int(rc['steps'])})
+
     return args
 
 def translate_nml(nml):
@@ -98,10 +102,8 @@ def translate_nml(nml):
                                                            nml['nonlinear_solver_parameters'])
         dc['turbulenceModelSolver'] = translate_turbulence(nml['nonlinear_solver_parameters'],
                                                            modelType='SpalartAllmaras')
-    if nml.get('inviscid_flux_method'):
-        rc = translate_inviscid_flux(nml['inviscid_flux_method'])
-        if rc:
-            dc['runControl'] = rc
+
+    dc['runControl'] = translate_inviscid_flux(nml['code_run_control'], nml.get('inviscid_flux_method'))
     return dc
 
 def translate_boundaries(mapbc):
