@@ -124,7 +124,6 @@ Caution: comments are not allowed to be submitted with the solver input.
         },
         "navierStokesSolver" : {
             "tolerance" : 1e-10, # Tolerance for the NS residual, below which the solver exits
-            "maxSteps" : 10000, # Maximum number ot time steps
             "CFL": { # Exponential CFL ramping, from initial to final, over _rampSteps_ steps
                 "initial" : 10.0,
                 "final" : 200.0,
