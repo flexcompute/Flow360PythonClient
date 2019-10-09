@@ -1,4 +1,5 @@
 import json
+import time
 from .authentication import auth, keys, refreshToken
 from .httputils import post, get, delete, flow360url
 from .s3utils import s3Client
@@ -172,3 +173,15 @@ def DownloadSolverOut(caseId):
     s3Client.download_file(Bucket='flow360cases',
                            Filename='solver.out',
                            Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'solver.out'))
+
+def WaitOnCase(caseId, timeout=86400, sleepSeconds=10):
+    startTime = time.time()
+    while time.time() - startTime < timeout:
+        try:
+            info = GetCaseInfo(caseId)
+            if info['status'] in ['error', 'unknownError', 'completed']:
+                return info['status']
+        except Exception as e:
+            print('Warning : {0}'.format(str(e)))
+
+        time.sleep(sleepSeconds)

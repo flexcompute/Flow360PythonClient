@@ -1,6 +1,7 @@
 import os
 import json
 import sys
+import time
 from boto3.s3.transfer import TransferConfig
 from .authentication import auth, keys, refreshToken
 from .httputils import post, get, delete
@@ -129,3 +130,17 @@ def DownloadMeshProc(meshId):
     s3Client.download_file(Bucket='flow360meshes',
                            Filename='meshproc.out',
                            Key='users/{0}/{1}/info/{2}'.format(keys['UserId'], meshId, 'meshproc.out'))
+
+
+
+def WaitOnMesh(meshId, timeout=86400, sleepSeconds=10):
+    startTime = time.time()
+    while time.time() - startTime < timeout:
+        try:
+            info = GetMeshInfo(meshId)
+            if info['status'] in ['error', 'unknownError', 'processed']:
+                return info['status']
+        except Exception as e:
+            print('Warning : {0}'.format(str(e)))
+
+        time.sleep(sleepSeconds)
