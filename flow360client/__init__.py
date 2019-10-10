@@ -7,7 +7,7 @@ from flow360client.fun3d_to_flow360 import translate_boundaries
 from flow360client.httputils import FileDoesNotExist
 
 def NewCase(meshId, config, caseName=None, tags=[],
-            priority='low', parentId=None):
+            priority='high', parentId=None):
     if isinstance(config, str):
         if not os.path.exists(config):
             print('config file {0} does not Exist!'.format(config), flush=True)
