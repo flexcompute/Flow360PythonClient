@@ -209,6 +209,18 @@ Caution: comments are not allowed to be submitted with the solver input.
             "3" : {
                 "type" : "Freestream"
             }
+        },
+        "initialCondition" : {
+            "type" : "expression",         # options: "freestream" (default), "expression"
+            "constants" : {                # all constants used to define the rho,u,v,w,p; optional for "type"=="expression"
+                "a" : "sqrt(2)*pi*3^(-1/3)",
+                "b" : "exp(2.5)+sin(2)"
+            },
+            "rho" : "cos(a*x)+sin(y)",           # required for "type"=="expression"
+            "u" : "pow(x,2.5)+y/3",              # required for "type"=="expression"
+            "v" : "a*sqrt(x)+pi*exp(pow(y,b))",  # required for "type"=="expression"
+            "w" : "log(pi*a*x^2)",               # required for "type"=="expression"
+            "p" : "log10(x/a)"                   # required for "type"=="expression"
         }
     }
 
