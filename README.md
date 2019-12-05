@@ -117,7 +117,6 @@ Caution: comments are not allowed to be submitted with the solver input.
         "runControl" :
         {
            "restart" : false, # restart not currently supported
-           "maxSteps : 10000, # the maximum number of total steps, including parent case steps
            "firstOrderIterations" : -1, # number of iterations to perform before turning on second order accuracy
            "startControl" : -1 # Time step at which to start targetCL control. -1 is no trim control.
            "targetCL" : 0.0 # The desired trim CL to achieve
@@ -150,11 +149,11 @@ Caution: comments are not allowed to be submitted with the solver input.
         },
         "freestream" :
         {
-            "Reynolds" : 10000.0, # Reynolds number = Re_physical/ref_length_in_grid_units
-            "Mach" : 0.3, # Mach number
-            "Temperature" : 288.15, # Temperature in Kelvin
-            "alphaAngle" : 0.0, # angle of attack
-            "betaAngle" : 0.0 # side slip angle
+            "Reynolds" : 10000.0, # REQUIRED. Reynolds number = Re_physical/ref_length_in_grid_units
+            "Mach" : 0.3, # REQUIRED. Mach number
+            "Temperature" : 288.15, # REQUIRED Temperature in Kelvin
+            "alphaAngle" : 0.0, # REQUIRED. angle of attack
+            "betaAngle" : 0.0 # REQUIRED. side slip angle
         },
         "volumeOutput" : {
             "outputFormat" : "paraview", # "paraview" || "tecplot"
@@ -245,7 +244,6 @@ Results between major versions (e.g. x.y.0) may differ slightly. However, result
 * Now using a blending of corrected and uncorrected viscous scheme. This effectively limits how much the corrected viscous scheme can differ from the uncorrected scheme. This is necessary because the Jacobian only includes contributions from the uncorrected scheme. 
 * Bug fix for supersonic farfield boundary condition. 
 * Tecplot output and single-file surface and slice output
-* Re-start capability using a "parent" case. 
 
 # Contact Support
 * john@flexcompute.com
