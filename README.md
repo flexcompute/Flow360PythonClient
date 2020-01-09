@@ -75,7 +75,7 @@ To download the entire flowfield:
 ```
 ## this print out csv formated content
 >>>flow360client.case.GetCaseResidual('<case_id>') 
->>>flow360client.case.GetCaseSurfaceForces('<case_id>', '<surface_id>')
+>>>flow360client.case.GetCaseSurfaceForces('<case_id>', '{''surfaceName'' : <surface_name>, ''surfaceIds'' : [<id0>, <id1>,...]}')
 ```
 
 ### Where is my AWS credential stored locally?
