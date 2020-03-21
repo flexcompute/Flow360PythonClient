@@ -1,11 +1,9 @@
 # Getting Started
 
-## Step 1. Download python client and install
+## Step 1. install flow360 client
 Make sure you have setuptools. If not, sudo apt-get install python3-setuptools
 ```
-git clone https://github.com/flexcompute/Flow360PythonClient.git flow360
-cd flow360
-python3 setup.py install --user
+pip3 install flow360client
 ```
 
 ## Step 2. Signing in with your account and password
