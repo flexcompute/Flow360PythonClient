@@ -1,4 +1,5 @@
 from setuptools import setup
+
 version = 0.1
 setup(
     name='flow360client',
@@ -8,5 +9,10 @@ setup(
     author_email='john@simulation.cloud',
     packages=['flow360client'],
     install_requires=['requests>=2.13.0', 'aws-requests-auth', 'bcrypt', 'boto3'],
-    dependency_links=['http://github.com/flexcompute/warrant/tarball/master#egg=warrant-0.6.4']
+    dependency_links=['http://github.com/flexcompute/warrant/tarball/master#egg=warrant-0.6.4'],
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Operating System :: OS Independent",
+    ],
+    python_requires='>=3.5'
 )
