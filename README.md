@@ -11,7 +11,7 @@ An account can be created at www.flexcompute.com
 ```
 python3
 >>> import flow360client
-simulation.cloud email:********@gmail.com
+enter your email registered at flexcompute:********@gmail.com
 Password: ***********
 Do you want to keep logged in on this machine ([Y]es / [N]o)Y
 ```
