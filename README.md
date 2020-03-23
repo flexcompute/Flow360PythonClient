@@ -23,7 +23,7 @@ First, specify a list of no-slip walls. If you have a .mapbc file, there is a fu
 ```
 >>>noSlipWalls = flow360client.noSlipWallsFromMapbc('/path/to/meshname.mapbc')
 ```
-For the Onera Wing, please manually set noSlipwalls:
+For the Onera Wing, please manually set noSlipWalls:
 ```
 >>>noSlipWalls = [1]
 ```
