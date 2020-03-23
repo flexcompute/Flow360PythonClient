@@ -17,22 +17,30 @@ Do you want to keep logged in on this machine ([Y]es / [N]o)Y
 ```
 
 ## Step 3. Upload a mesh file
+A mesh of the ONERA M6 wing can be downloaded [here](https://flow360public.s3-us-west-1.amazonaws.com/wing_tetra.1.lb8.ugrid).
+
 First, specify a list of no-slip walls. If you have a .mapbc file, there is a function that will do this for you:
 ```
 >>>noSlipWalls = flow360client.noSlipWallsFromMapbc('/path/to/meshname.mapbc')
 ```
+For the above example mesh of ONERA M6 wing, the surface ID of the wing is 1, so you can set noSlipWalls:
+```
+>>>noSlipWalls = [1]
+```
+If there are multiple surfaces of no-slip walls in your mesh, use a comma between them, e.g. noSlipWalls=[1,3,7]
+
 Then submit a mesh
 ```
 >>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'])
 ```
-Replace above fname and noSlipWalls with your own file path and parameter.
+Replace above fname and noSlipWalls with your own file path and parameter. Currently the only supported format is UGRID. Allowable extensions are .ugrid, .ugrid.gz, and .ugrid.bz2. 
 Parameter inputs of mesh name and tags are optional.
 Upon this command finishing, it will return the mesh Id '<mesh_id>'. Use that for next step.
 
 Note:
 By default, submited mesh file will be processed using latest major release (e.g. 0.2.x) . If you want to run with another version of the solve, please specify in the argument as example:
 ```
->>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'], solverVersion='release-0.2.1')
+>>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['onera_wing'], solverVersion='release-0.2.1')
 ```
 
 ## Step 4. Upload a case file
@@ -41,9 +49,11 @@ First, prepare a JSON input file, either manually or by using the fun3d_to_flow3
 python3 /path/to/flow360/flow360client/fun3d_to_flow360.py /path/to/fun3d.nml /path/to/mesh.mapbc /output/path/for/Flow360.json
 
 ```
+A JSON file corresponding to the ONERA M6 wing test case can be found [here](https://flow360public.s3-us-west-1.amazonaws.com/Flow360_onera.json).
+
 Then submit a case:
 ```
->>> caseId = flow360client.NewCase(meshId='<mesh_id>', config='/output/path/for/Flow360.json', caseName='case2', tags=['wing'])
+>>> caseId = flow360client.NewCase(meshId='<mesh_id>', config='/path/to/Flow360.json', caseName='case2', tags=['wing'])
 ```
 Replace the mesh id generated from above step, and give your own config path.
 Parameter inputs of caseName and tags are optional.
