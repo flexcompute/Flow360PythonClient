@@ -53,7 +53,7 @@ A JSON file corresponding to the ONERA M6 wing test case can be found [here](htt
 
 Then submit a case:
 ```
->>> caseId = flow360client.NewCase(meshId='<mesh_id>', config='/output/path/for/Flow360.json', caseName='case2', tags=['wing'])
+>>> caseId = flow360client.NewCase(meshId='<mesh_id>', config='/path/to/Flow360.json', caseName='case2', tags=['wing'])
 ```
 Replace the mesh id generated from above step, and give your own config path.
 Parameter inputs of caseName and tags are optional.
