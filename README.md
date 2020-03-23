@@ -23,10 +23,12 @@ First, specify a list of no-slip walls. If you have a .mapbc file, there is a fu
 ```
 >>>noSlipWalls = flow360client.noSlipWallsFromMapbc('/path/to/meshname.mapbc')
 ```
-For the Onera Wing, please manually set noSlipWalls:
+For the above example mesh of ONERA M6 wing, the surface ID of the wing is 1, so you can set noSlipWalls:
 ```
 >>>noSlipWalls = [1]
 ```
+If there are multiple surfaces of no-slip walls in your mesh, use a comma between them, e.g. noSlipWalls=[1,3,7]
+
 Then submit a mesh
 ```
 >>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'])
@@ -47,7 +49,7 @@ First, prepare a JSON input file, either manually or by using the fun3d_to_flow3
 python3 /path/to/flow360/flow360client/fun3d_to_flow360.py /path/to/fun3d.nml /path/to/mesh.mapbc /output/path/for/Flow360.json
 
 ```
-A JSON file corresponding to the ONERA wing test case can be found [here](https://flow360public.s3-us-west-1.amazonaws.com/Flow360_onera.json).
+A JSON file corresponding to the ONERA M6 wing test case can be found [here](https://flow360public.s3-us-west-1.amazonaws.com/Flow360_onera.json).
 
 Then submit a case:
 ```
