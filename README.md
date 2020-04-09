@@ -116,44 +116,9 @@ Caution: comments are not allowed to be submitted with the solver input.
     {
         "geometry" :
         {
-            "meshName" : "mesh.lb8.ugrid",  # not necessary
-            "endianness" : "little", # not necessary
             "refArea" : 1.0, # Reference area, in grid units
             "momentCenter" : [0.0, 0.0, 0.0], # x,y,z moment center
             "momentLength" : [1.0, 1.0, 1.0] # x,y,z moment reference lengths
-        },
-        "runControl" :
-        {
-           "restart" : false, # restart not currently supported
-           "firstOrderIterations" : -1, # number of iterations to perform before turning on second order accuracy
-           "startControl" : -1 # Time step at which to start targetCL control. -1 is no trim control.
-           "targetCL" : 0.0 # The desired trim CL to achieve
-        },
-        "navierStokesSolver" : {
-            "tolerance" : 1e-10, # Tolerance for the NS residual, below which the solver exits
-            "CFL": { # Exponential CFL ramping, from initial to final, over _rampSteps_ steps
-                "initial" : 10.0,
-                "final" : 200.0,
-                "rampSteps" : 200
-            },
-            "linearIterations" : 25, # Number of iterations for the linear solver to perform
-            "kappaMUSCL" : 0.3333333333333 # kappa for the MUSCL scheme, range from [-1, 1], with 1 being unstable.
-            "maxDt" : 1.0e100, # Maximum time step
-            "startEnforcingMaxDtStep" : -1, # time step at which to start enforcing maxDtStep. Default of -1 does not enforce a max time step.
-            "updateJacobianFrequency" : 4, # Frequency at which the jacobian is updated.
-            "viscousWaveSpeedScale" : 0.0 # Scales the wave speed acording to a viscous flux. 0.0 is no speed correction, with larger values providing a larger viscous wave speed correction.
-        },
-        "turbulenceModelSolver" : {
-           "modelType" : "SpalartAllmaras", # Only SA supported at this point
-            "CFL" : { # Exponential CFL ramping, from initial to final, over _rampSteps_ steps
-                "initial" : 10,
-                "final" : 200,
-                "rampSteps" : 200
-            },
-            "linearIterations" : 15, # Number of linear iterations for the SA linear system
-            "kappaMUSCL" : -1.0, # kappa for the muscle scheme, range from [-1, 1] with 1 being unstable.
-            "rotationCorrection" : false, # SARC model
-            "DDES" : false # _true_ Enables DDES simulation
         },
         "freestream" :
         {
@@ -162,6 +127,28 @@ Caution: comments are not allowed to be submitted with the solver input.
             "Temperature" : 288.15, # REQUIRED Temperature in Kelvin
             "alphaAngle" : 0.0, # REQUIRED. angle of attack
             "betaAngle" : 0.0 # REQUIRED. side slip angle
+        },
+
+        "runControl" :
+        {
+           "restart" : false, # restart not currently supported
+           "firstOrderIterations" : -1, # number of iterations to perform before turning on second order accuracy
+           "startControl" : -1, # Time step at which to start targetCL control. -1 is no trim control.
+           "targetCL" : 0.0 ,# The desired trim CL to achieve,
+           "maxSteps" : 10000 # the maximum number of time steps or iterations to take
+        },
+        "boundaries" :
+        {
+            # List of boundary conditions. e.g.
+            "1" : {
+                "type" : "NoSlipWall"
+            },
+            "2" : {
+                "type" : "SlipWall"
+            },
+            "3" : {
+                "type" : "Freestream"
+            }
         },
         "volumeOutput" : {
             "outputFormat" : "paraview", # "paraview" || "tecplot"
@@ -203,31 +190,32 @@ Caution: comments are not allowed to be submitted with the solver input.
                 "sliceOrigin" : [0.0, 0.0, 0.0] # Origin of the first slice
               }
             ]                 
-        },   
-        "boundaries" :
-        {
-            # List of boundary conditions. e.g.
-            "1" : {
-                "type" : "NoSlipWall"
-            },
-            "2" : {
-                "type" : "SlipWall"
-            },
-            "3" : {
-                "type" : "Freestream"
-            }
         },
-        "initialCondition" : {
-            "type" : "expression",         # options: "freestream" (default), "expression"
-            "constants" : {                # all constants used to define the rho,u,v,w,p; optional for "type"=="expression"
-                "a" : "sqrt(2)*pi*3^(-1/3)",
-                "b" : "exp(2.5)+sin(2)"
+        "navierStokesSolver" : {
+            "tolerance" : 1e-10, # Tolerance for the NS residual, below which the solver exits
+            "CFL": { # Exponential CFL ramping, from initial to final, over _rampSteps_ steps
+                "initial" : 10.0,
+                "final" : 200.0,
+                "rampSteps" : 200
             },
-            "rho" : "cos(a*x)+sin(y)",           # required for "type"=="expression"
-            "u" : "pow(x,2.5)+y/3",              # required for "type"=="expression"
-            "v" : "a*sqrt(x)+pi*exp(pow(y,b))",  # required for "type"=="expression"
-            "w" : "log(pi*a*x^2)",               # required for "type"=="expression"
-            "p" : "log10(x/a)"                   # required for "type"=="expression"
+            "linearIterations" : 25, # Number of iterations for the linear solver to perform
+            "kappaMUSCL" : 0.3333333333333 # kappa for the MUSCL scheme, range from [-1, 1], with 1 being unstable.
+            "maxDt" : 1.0e100, # Maximum time step
+            "startEnforcingMaxDtStep" : -1, # time step at which to start enforcing maxDtStep. Default of -1 does not enforce a max time step.
+            "updateJacobianFrequency" : 4, # Frequency at which the jacobian is updated.
+            "viscousWaveSpeedScale" : 0.0 # Scales the wave speed acording to a viscous flux. 0.0 is no speed correction, with larger values providing a larger viscous wave speed correction.
+        },
+        "turbulenceModelSolver" : {
+           "modelType" : "SpalartAllmaras", # Only SA supported at this point
+            "CFL" : { # Exponential CFL ramping, from initial to final, over _rampSteps_ steps
+                "initial" : 10,
+                "final" : 200,
+                "rampSteps" : 200
+            },
+            "linearIterations" : 15, # Number of linear iterations for the SA linear system
+            "kappaMUSCL" : -1.0, # kappa for the muscle scheme, range from [-1, 1] with 1 being unstable.
+            "rotationCorrection" : false, # SARC model
+            "DDES" : false # _true_ Enables DDES simulation
         }
     }
 
