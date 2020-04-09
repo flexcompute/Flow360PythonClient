@@ -203,6 +203,7 @@ Caution: comments are not allowed to be submitted with the solver input.
             "maxDt" : 1.0e100, # Maximum time step
             "startEnforcingMaxDtStep" : -1, # time step at which to start enforcing maxDtStep. Default of -1 does not enforce a max time step.
             "updateJacobianFrequency" : 4, # Frequency at which the jacobian is updated.
+            "equationEvalFrequency" : 1, # Frequency at which to update the NS equation in loosely-coupled simulations
             "viscousWaveSpeedScale" : 0.0 # Scales the wave speed acording to a viscous flux. 0.0 is no speed correction, with larger values providing a larger viscous wave speed correction.
         },
         "turbulenceModelSolver" : {
@@ -214,6 +215,8 @@ Caution: comments are not allowed to be submitted with the solver input.
             },
             "linearIterations" : 15, # Number of linear iterations for the SA linear system
             "kappaMUSCL" : -1.0, # kappa for the muscle scheme, range from [-1, 1] with 1 being unstable.
+            "updateJacobianFrequency" : 4, # frequency at which to update the Jacobian
+            "equationEvalFrequency" : 4, # frequency at which to evaluate the turbulence equation in loosely-coupled simulations
             "rotationCorrection" : false, # SARC model
             "DDES" : false # _true_ Enables DDES simulation
         }
