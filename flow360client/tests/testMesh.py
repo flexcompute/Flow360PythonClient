@@ -1,18 +1,12 @@
-import os
-import sys
-import time
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import mesh
 
-mesh.user_id = 'AIDALXX5IIHVGTNCAOAP6'
+from flow360client import mesh
 
-resp = mesh.AddMesh('OM6_Wing_Tetra', [1], ['OM6'], 'aflr3', 'little')
+resp = mesh.AddMesh('vortex_100', [1], ['tag1'], 'cgns', '', 'release-20.2.1')
 print(resp)
 meshId = resp['meshId']
 print(meshId)
 
-mesh.UploadMesh(meshId, 'data/wing_tetra.1.lb8.ugrid.gz')
-
+mesh.UploadMesh(meshId, 'data/vortex_100.cgns')
 resp = mesh.GetMeshInfo(meshId=meshId)
 print(resp)
 

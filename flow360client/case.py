@@ -1,9 +1,10 @@
-import json
 import time
-from .authentication import auth, keys, refreshToken
-from .httputils import post, get, delete, flow360url
+from .authentication import refreshToken
+from .httputils import post2, delete2, get2
 from .s3utils import s3Client
-
+from .config import Config
+auth = Config.auth
+keys = Config.user
 @refreshToken
 def SubmitCase(name, tags, meshId, priority, config, parentId=None):
     body = {
@@ -11,90 +12,59 @@ def SubmitCase(name, tags, meshId, priority, config, parentId=None):
         "tags": tags,
         "meshId" : meshId,
         "priority" : priority,
-        "runtimeParams" : config,
-        "parentId" : parentId
+        "runtimeParams": config,
+        "parentId": parentId
     }
 
-    url = '{0}/{1}'.format(flow360url, 'submit-case')
+    url = f'mesh/{meshId}/case'
 
-    resp = post(url, auth=auth, data=json.dumps(body))
+    resp = post2(url, data=body)
     return resp
 
 @refreshToken
 def DeleteCase(caseId):
-    params = {
-        "caseId": caseId,
-    }
 
-    url = '{0}/{1}'.format(flow360url, 'delete-case')
-
-    resp = delete(url, auth=auth, params=params)
+    url = f'case/{caseId}'
+    resp = delete2(url)
     return resp
 
 @refreshToken
 def GetCaseInfo(caseId):
-    params = {
-        "caseId": caseId,
-    }
 
-    url = '{0}/{1}'.format(flow360url, 'get-case-info')
+    url = f'case/{caseId}'
 
-    resp = get(url, auth=auth, params=params)
-    return resp
-
-@refreshToken
-def PauseResumeCase(caseId, action):
-    data = {
-        "caseId": caseId,
-        "action" : action
-    }
-
-    url = '{0}/{1}'.format(flow360url, 'pause-resume-case')
-
-    resp = post(url, auth=auth, data=json.dumps(data))
+    resp = get2(url)
     return resp
 
 @refreshToken
 def ListCases(name=None, status=None, meshId=None, include_deleted=False):
-    params = {
-        "name": name,
-        "status": status,
-        "meshId" : meshId
-    }
+    if meshId is None:
+        url = "cases"
+    else:
+        url = f'mesh/{meshId}/cases'
 
-    url = '{0}/{1}'.format(flow360url, 'list-cases')
-
-    resp = get(url, auth=auth, params=params)
+    resp = get2(url)
     if not include_deleted:
-        resp = list(filter(lambda i : i['status'] != 'deleted', resp))
+        resp = list(filter(lambda i : i['caseStatus'] != 'deleted', resp))
     return resp
 
 @refreshToken
 def GetCaseResidual(caseId):
-    params = {
-        "caseId" : caseId
-    }
 
-    url = '{0}/{1}'.format(flow360url, 'get-case-residual')
-
-    resp = get(url, auth=auth, params=params)
+    url = f'case/{caseId}/residual'
+    resp = get2(url)
     return resp
 
 @refreshToken
 def GetCaseTotalForces(caseId):
-    params = {
-        "caseId" : caseId
-    }
-
-    url = '{0}/{1}'.format(flow360url, 'get-case-total-forces')
-
-    resp = get(url, auth=auth, params=params)
+    url = f'case/{caseId}/totalForces'
+    resp = get2(url)
     return resp
 
 @refreshToken
 def GetCaseSurfaceForces(caseId, surfaces):
     try:
-        obj = s3Client.get_object(Bucket='flow360cases',
+        obj = s3Client.get_object(Bucket=Config.CASE_BUCKET,
                                   Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'surface_forces.csv'))
         data = obj['Body'].read().decode('utf-8')
     except Exception as e:
@@ -151,7 +121,7 @@ def DownloadVolumetricResults(caseId, fileName):
     if fileName[-7:] != '.tar.gz':
         print('fileName must have extension .tar.gz!')
         return
-    s3Client.download_file(Bucket='flow360cases',
+    s3Client.download_file(Bucket=Config.CASE_BUCKET,
                          Filename=fileName,
                          Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))
 
@@ -170,7 +140,7 @@ def DownloadCaseResults(caseId, fileName):
 
 @refreshToken
 def DownloadSolverOut(caseId):
-    s3Client.download_file(Bucket='flow360cases',
+    s3Client.download_file(Bucket=Config.CASE_BUCKET,
                            Filename='solver.out',
                            Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'solver.out'))
 
