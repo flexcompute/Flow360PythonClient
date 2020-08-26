@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import time
@@ -31,7 +32,13 @@ def AddMesh(name, noSlipWalls, tags, fmat, endianness, solver_version):
         "meshTags": tags,
         "meshFormat": fmat,
         "meshEndianness" : endianness,
-        "meshNoSlipBoundaries": noSlipWalls,
+        "meshParams": json.dumps({
+            "boundaries":
+                {
+                    "noSlipWalls": noSlipWalls
+                }
+        }),
+
     }
 
     if solver_version:
@@ -81,7 +88,7 @@ def UploadMesh(meshId, meshFile):
     '''
     UploadMesh(meshId, meshFile)
     '''
-    def getMeshName(meshFile, meshFormat, endianness):
+    def getMeshName(meshFile, meshName, meshFormat, endianness):
         if meshFormat == 'aflr3':
             if endianness == 'big':
                 name = 'mesh.b8.ugrid'
@@ -90,7 +97,10 @@ def UploadMesh(meshId, meshFile):
             else:
                 raise RuntimeError("unknown endianness: {}".format(endianness))
         else:
-            name = 'mesh.' + meshFormat
+            name = meshName
+            if not name.endswith(meshFormat):
+                name += '.' + meshFormat
+
         if meshFile.endswith('.gz'):
             name += '.gz'
         elif meshFile.endswith('.bz2'):
@@ -99,7 +109,7 @@ def UploadMesh(meshId, meshFile):
 
     meshInfo = GetMeshInfo(meshId)
     print(meshInfo)
-    fileName = getMeshName(meshFile, meshInfo['meshFormat'],
+    fileName = getMeshName(meshFile, meshInfo['meshName'], meshInfo['meshFormat'],
                            meshInfo['meshEndianness'])
 
     if not os.path.exists(meshFile):

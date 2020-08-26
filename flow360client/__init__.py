@@ -29,6 +29,10 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
         raise FileDoesNotExist(fname)
     if meshName is None:
         meshName = os.path.basename(fname).split('.')[0]
+
+    fmat = 'aflr3';
+
+
     if fmat is None:
         if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \
                 fname.endswith('.ugrid.bz2'):
@@ -53,7 +57,7 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
     return meshId
 
 
-def NewMeshWithTransform(folder, rotateJson, mergeJson, meshName=None, tags=[], solverVersion=None):
+def NewMeshWithTransform(fname, noSlipWalls, meshName=None, tags=[], solverVersion=None):
     if not os.path.exists(folder):
         print('data folder {0} does not Exist!'.format(folder), flush=True)
         raise FileDoesNotExist(folder)
