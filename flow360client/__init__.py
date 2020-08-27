@@ -18,7 +18,7 @@ def NewCase(meshId, config, caseName=None, tags=[],
         config = json.load(open(config))
     assert isinstance(config, dict)
     assert caseName is not None
-    resp = case.SubmitCase(caseName, tags, meshId, priority, config, parentId)
+    resp = case.SubmitCase(caseName, tags, meshId, priority, json.dumps(config), parentId)
     return resp['caseId']
 
 
