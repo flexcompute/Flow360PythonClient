@@ -30,15 +30,16 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
     if meshName is None:
         meshName = os.path.basename(fname).split('.')[0]
 
-    fmat = 'aflr3';
-
-
     if fmat is None:
         if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \
                 fname.endswith('.ugrid.bz2'):
             fmat = 'aflr3'
+        elif fname.endswith('.cgns') or fname.endswith('.cgns.gz') or \
+                fname.endswith('.cgns.bz2'):
+            fmat = 'cgns'
         else:
             raise RuntimeError('Unknown format for file {}'.format(fname))
+
     if endianness is None:
         try:
             if fname.find('.b8.') != -1:
@@ -47,9 +48,11 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
             elif fname.find('.lb8.') != -1:
                 endianness = 'little'
             else:
-                raise RuntimeError("invalid file name")
+                endianness = ''
         except:
             raise RuntimeError('Unknown endianness for file {}'.format(fname))
+
+
     resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness, solverVersion)
     meshId = resp['meshId']
     mesh.UploadMesh(meshId, fname)
