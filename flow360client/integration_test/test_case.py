@@ -60,3 +60,9 @@ class TestFlow360Case(TestCase):
     def test_GetCaseSurfaceForces(self):
         sf = case.GetCaseSurfaceForces("a1a7103c-21ff-49ff-8328-dc85d9bc62d3",[])
         print(sf)
+
+    def test_DownloadSurface(self):
+        sf = case.DownloadSurfaceResults("e49d38b5-e39b-4ac9-85aa-5466d8cef516")
+
+    def test_DownloadSolver(self):
+        sf = case.DownloadSolverOut("e49d38b5-e39b-4ac9-85aa-5466d8cef516")
