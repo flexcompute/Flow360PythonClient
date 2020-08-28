@@ -77,7 +77,7 @@
     },
     "timeStepping" : {
         "timeStepSize" : 2.0,
-        "maxPhysicalSteps" : 1,
+        "maxPhysicalSteps" : 2000,
         "maxPseudoSteps" : 40,
         "CFL" : {
             "initial" : 100,
