@@ -6,7 +6,6 @@ print(meshId)
 
 resp = mesh.ListMeshes()
 print(resp)
-
 caseId = NewCase(meshId=meshId, config='data/cyclinder_case.json', caseName='case2', tags=[],
             priority='high', parentId=None)
 
