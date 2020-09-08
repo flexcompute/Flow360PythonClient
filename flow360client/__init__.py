@@ -6,6 +6,7 @@ from flow360client.httputils import FileDoesNotExist
 from flow360client.fun3d_to_flow360 import translate_boundaries
 from flow360client.httputils import FileDoesNotExist
 
+
 def NewCase(meshId, config, caseName=None, tags=[],
             priority='high', parentId=None):
     if isinstance(config, str):
@@ -17,8 +18,9 @@ def NewCase(meshId, config, caseName=None, tags=[],
         config = json.load(open(config))
     assert isinstance(config, dict)
     assert caseName is not None
-    resp = case.SubmitCase(caseName, tags, meshId, priority, config, parentId)
+    resp = case.SubmitCase(caseName, tags, meshId, priority, json.dumps(config), parentId)
     return resp['caseId']
+
 
 def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
             fmat=None, endianness=None, solverVersion=None):
@@ -27,27 +29,44 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
         raise FileDoesNotExist(fname)
     if meshName is None:
         meshName = os.path.basename(fname).split('.')[0]
+
     if fmat is None:
         if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \
-           fname.endswith('.ugrid.bz2'):
+                fname.endswith('.ugrid.bz2'):
             fmat = 'aflr3'
+        elif fname.endswith('.cgns') or fname.endswith('.cgns.gz') or \
+                fname.endswith('.cgns.bz2'):
+            fmat = 'cgns'
         else:
             raise RuntimeError('Unknown format for file {}'.format(fname))
+
     if endianness is None:
         try:
             if fname.find('.b8.') != -1:
                 endianness = 'big'
+
             elif fname.find('.lb8.') != -1:
                 endianness = 'little'
             else:
-                raise
+                endianness = ''
         except:
             raise RuntimeError('Unknown endianness for file {}'.format(fname))
+
+
     resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness, solverVersion)
     meshId = resp['meshId']
     mesh.UploadMesh(meshId, fname)
     print()
     return meshId
+
+
+def NewMeshWithTransform(fname, noSlipWalls, meshName=None, tags=[], solverVersion=None):
+    if not os.path.exists(folder):
+        print('data folder {0} does not Exist!'.format(folder), flush=True)
+        raise FileDoesNotExist(folder)
+    print()
+    return ""
+
 
 def noSlipWallsFromMapbc(mapbcFile):
     assert mapbcFile.endswith('.mapbc') == True

@@ -1,12 +1,7 @@
-import os
-import sys
-import time
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import mesh
 
-mesh.user_id = 'AIDALXX5IIHVGTNCAOAP6'
+from flow360client import mesh
 
-resp = mesh.AddMesh('OM6_Wing_Tetra', [1], ['OM6'], 'aflr3', 'little')
+resp = mesh.AddMesh('OM6_Wing_Tetra', [1], ['OM6'], 'aflr3', 'little', 'release-20.3.1')
 print(resp)
 meshId = resp['meshId']
 print(meshId)
