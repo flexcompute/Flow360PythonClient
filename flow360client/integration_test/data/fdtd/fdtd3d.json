@@ -1,0 +1,73 @@
+{
+    "parameters": {
+    "unit_length": "um",
+    "unit_frequency": "THz",
+    "unit_time": "ps",
+    "x_span": 6.02,
+    "y_span": 8.0,
+    "z_span": 1.01,
+    "resolution": 0.1,
+    "xmin_bc": "periodic",
+    "xmax_bc": "periodic",
+    "ymin_bc": "pml",
+    "ymax_bc": "pml",
+    "zmin_bc": "periodic",
+    "zmax_bc": "periodic",
+    "run_time": 0.4
+    },
+    "objects": [
+        {
+            "name": "box1",
+            "type": "box",
+            "x_cent": 0,
+            "y_cent": 0.5,
+            "z_cent": 0,
+            "x_span": 2.0,
+            "y_span": 2.0,
+            "z_span": 2.0,
+            "permittivity": 5,
+            "conductivity": 0
+        }
+    ],
+    "sources": [
+        {
+            "name": "source1",
+            "type": "PlaneSource",
+            "x_cent": 0.0,
+            "y_cent": -2.0,
+            "z_cent": 0.0,
+            "normal": "y",
+            "polarization": "z",
+            "frequency": 200.0,
+            "fwidth": 40.0,
+            "amplitude": 1.0,
+            "current": "electric"
+        }
+    ],
+    "probes": [
+        {
+            "name": "probe1",
+            "type": "FrequencyProbe",
+            "x_cent": 0.0,
+            "y_cent": 0.5,
+            "z_cent": 0.0,
+            "x_span": 2.0,
+            "y_span": 0.0,
+            "z_span": 2.0,
+            "frequency": 200.0,
+            "field": "E"
+        },
+        {
+            "name": "prb2",
+            "type": "FrequencyProbe",
+            "x_cent": 0.0,
+            "y_cent": 0.0,
+            "z_cent": 0.0,
+            "x_span": 20,
+            "y_span": 20,
+            "z_span": 0.0,
+            "frequency": 200.0,
+            "field": "E"
+        }
+    ]
+}

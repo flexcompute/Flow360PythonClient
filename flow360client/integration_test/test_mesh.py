@@ -10,7 +10,7 @@ class TestMesh(TestCase):
         GetMeshInfo("bfa29e8f-5c9e-4777-8648-8c8f189c60a9")
 
     def test_DownloadMeshProc(self):
-        mesh.DownloadMeshProc("bfa29e8f-5c9e-4777-8648-8c8f189c60a9")
+        mesh.DownloadMeshProc("aabbade3-1405-4b94-9fa2-c53dd4d64d8d")
 
     def test_ListMeshes(self):
         meshes = ListMeshes()

@@ -65,4 +65,4 @@ class TestFlow360Case(TestCase):
         sf = case.DownloadSurfaceResults("e49d38b5-e39b-4ac9-85aa-5466d8cef516")
 
     def test_DownloadSolver(self):
-        sf = case.DownloadSolverOut("e49d38b5-e39b-4ac9-85aa-5466d8cef516")
+        sf = case.DownloadSolverOut("b06f21b4-481a-4804-afd4-3c4429c273ce")
