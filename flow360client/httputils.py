@@ -29,7 +29,7 @@ def handle_response(func):
 
 
 @handle_response
-def post2(method, data):
+def post2(method, data=None):
     queryUrl = f"{Config.WEB_API_ENDPONT}/{method}"
     headers = {'Authorization': f"Bearer {Config.auth['accessToken']}", 'FLOW360USER': Config.user['identityId']}
     return requests.post(queryUrl, headers=headers, json=data)

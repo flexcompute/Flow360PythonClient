@@ -1,0 +1,12 @@
+{
+  "sources": [
+    "blade1.cgns",
+    "outer.cgns"
+  ],
+  "transforms": [
+    "rotate1.json",
+    "rotate2.json"
+  ],
+  "merge": "boundaryMatching.json",
+  "mesh": "Flow360Mesh.json"
+}

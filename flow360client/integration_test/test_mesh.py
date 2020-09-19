@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from flow360client import mesh
+from flow360client import mesh, NewMeshWithTransform
 
 from flow360client.mesh import ListMeshes, GetMeshInfo, getFileCompression, DeleteMesh
 
@@ -26,3 +26,7 @@ class TestMesh(TestCase):
         meshId = resp['meshId']
         print(meshId)
         DeleteMesh(meshId)
+
+    def test_NewMeshTransform(self):
+        NewMeshWithTransform('data/transform/all.json', 'test')
+

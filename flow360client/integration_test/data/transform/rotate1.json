@@ -1,0 +1,19 @@
+{
+    "inputMesh" : "blade1.cgns",
+    "outputMesh" : "blade2.cgns",
+    "transformations" : [
+        {
+            "type" : "rotation",
+            "centerOfRotation" : [0,0,0],
+            "axisOfRotation" : [0,0,1],
+            "degreeOfRotation" : 120
+        }
+    ],
+    "renameZones":
+    [
+        {
+            "source" : "blk-1",
+            "target" : "blk-2"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+"meshFiles":
+    [
+        "outer.cgns",
+        "blade1.cgns",
+        "blade2.cgns",
+        "blade3.cgns"
+    ]
+}
