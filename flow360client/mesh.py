@@ -7,7 +7,7 @@ from os.path import getsize
 from boto3.s3.transfer import TransferConfig
 from .authentication import refreshToken
 from .httputils import post2, get2, put2, delete2
-from .s3utils import s3Client
+from .s3utils import s3Client, UploadProgress
 from .httputils import FileDoesNotExist
 from .config import Config
 auth = Config.auth
@@ -72,16 +72,6 @@ def ListMeshes(include_deleted=False):
         resp = list(filter(lambda i: i['meshStatus'] != 'deleted', resp))
     return resp
 
-class UploadProgress(object):
-
-    def __init__(self, size):
-        self.size = size
-        self.uploadedSoFar = 0
-
-    def report(self, bytes_in_chunk):
-        self.uploadedSoFar += bytes_in_chunk
-        sys.stdout.write('\rfile upload progress: {0:2.2f} %'.format(float(self.uploadedSoFar)/self.size*100))
-        sys.stdout.flush()
 
 @refreshToken
 def UploadMesh(meshId, meshFile):

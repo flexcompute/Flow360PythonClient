@@ -1,10 +1,16 @@
 import os
 import json
+import sys
+import uuid
+
 import flow360client.mesh
 import flow360client.case
-from flow360client.httputils import FileDoesNotExist
+from flow360client.config import Config
+from flow360client.httputils import FileDoesNotExist, post2
 from flow360client.fun3d_to_flow360 import translate_boundaries
 from flow360client.httputils import FileDoesNotExist
+from flow360client.studio import UploadStudioItem, NewStudioItem
+from flow360client.task import NewTask, GetTask, WaitOnTask
 
 
 def NewCase(meshId, config, caseName=None, tags=[],
@@ -60,12 +66,114 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
     return meshId
 
 
-def NewMeshWithTransform(fname, noSlipWalls, meshName=None, tags=[], solverVersion=None):
-    if not os.path.exists(folder):
-        print('data folder {0} does not Exist!'.format(folder), flush=True)
-        raise FileDoesNotExist(folder)
-    print()
-    return ""
+def NewMeshWithTransform(fname, meshName=None, tags=[], solverVersion=None):
+    if not solverVersion:
+        solverVersion = Config.VERSION_CFD
+    if not meshName:
+        meshName = 'Flow360Mesh'
+    with open(fname) as file:
+        globalJson = json.load(file)
+    transformsJson = globalJson["transforms"]
+    meshFile = globalJson["mesh"]
+    dirName = os.path.dirname(os.path.abspath(fname))
+    transformingTasks = []
+
+    sourceFiles = globalJson["sources"]
+    fileToStudioItem = {}
+    print("uploading source files")
+    for filename in sourceFiles:
+
+        item = UploadStudioItem(uuid.uuid1(), os.path.join(dirName, filename))
+        print(item)
+        fileToStudioItem[filename] = item
+
+
+    for transformConfigFile in transformsJson:
+        with open(os.path.join(dirName, transformConfigFile), 'r') as file:
+            transformConfig = json.load(file)
+            taskParam = json.dumps(transformConfig)
+        filename = transformConfig['inputMesh']
+        if filename in fileToStudioItem.keys():
+
+
+            item = fileToStudioItem[filename]
+
+            newItem = NewStudioItem({
+                'status': "processing",
+                'parentId': item['itemId'],
+                's3Path': transformConfig['outputMesh']
+            })
+
+            task = {
+                'taskParam': taskParam,
+                'taskType': 'transform',
+                'objectId': newItem['itemId'],
+                'solverVersion': solverVersion
+            }
+
+            task = NewTask(task)
+            print(task)
+            transformingTasks.append(task)
+        else:
+            raise RuntimeError(f'the required file is not uploaded: \r {transformConfig["inputMesh"]}')
+
+    transformingSize = len(transformingTasks)
+    transformedSize = 0
+
+    while transformedSize < transformingSize:
+        for task in transformingTasks:
+            status = WaitOnTask(task['taskId'])
+            if status == 'success':
+                transformedSize = transformedSize + 1
+            elif status == 'error':
+                raise RuntimeError(f'transformed failed for {task["objectId"]}: \r {task["taskParam"]}')
+            sys.stdout.write(f'\r transformed {transformedSize} / {transformingSize}')
+            sys.stdout.flush()
+
+    # merge the files.
+    parentIds = [x['objectId'] for x in transformingTasks] + [x['itemId'] for x in fileToStudioItem.values()]
+
+    print(f"\r transformed {transformedSize} / {transformingSize}")
+    print("\rstart merge process...")
+    mergeJson = globalJson["merge"]
+    item = {
+        'status': "processing",
+        'parentId': ','.join(parentIds),
+        's3Path': f'{meshName}.meshmerged.json'
+    }
+    item = NewStudioItem(item)
+    with open(os.path.join(dirName, mergeJson), 'r') as file:
+        taskParam = file.read()
+    task = {
+        'taskType': "merge",
+        'taskParam': taskParam,
+        'objectId': item['itemId'],
+        'solverVersion': solverVersion,
+    }
+    task = NewTask(task)
+
+    print(f'merge.task:{task}')
+    status = WaitOnTask(task['taskId'])
+    if status == 'error':
+        raise RuntimeError(f'merge failed: \r {task["taskParam"]}')
+    with open(os.path.join(dirName, meshFile), 'r') as file:
+        meshParam = file.read()
+
+    mesh = {
+        'meshName': meshName,
+        'meshTags': tags,
+        'meshFormat': '',
+        'meshSize': 0,
+        'meshParams': meshParam,
+        'meshStatus': 'uploading',
+        'solverVersion': solverVersion,
+        'meshCompression': 'tar.gz'
+    }
+
+    finalMesh = post2("mesh", data=mesh)
+    mesh = post2(f'studio/item/{item["itemId"]}/copyToMesh/{finalMesh["meshId"]}')
+    print("start mesh process on backend")
+    print(mesh)
 
 
 def noSlipWallsFromMapbc(mapbcFile):

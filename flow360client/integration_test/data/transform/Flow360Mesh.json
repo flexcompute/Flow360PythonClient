@@ -1,0 +1,20 @@
+{
+    "boundaries": {
+        "noSlipWalls": [
+            "blk-1/quad_blade",
+            "blk-1/tri_blade",
+            "blk-2/quad_blade",
+            "blk-2/tri_blade",
+            "blk-3/quad_blade",
+            "blk-3/tri_blade"
+        ]
+    },
+    "slidingInterfaces" : [
+        {
+            "stationaryPatches" : ["stationaryField/rotationInterface"],
+            "rotatingPatches" : ["rotationField/rotationInterface"],
+            "axisOfRotation" : [0,0,-1],
+            "centerOfRotation" : [0,0,0]
+        }                                                                        
+    ]                                                                            
+}                                                                                
