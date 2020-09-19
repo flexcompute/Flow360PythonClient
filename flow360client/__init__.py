@@ -160,7 +160,7 @@ def NewMeshWithTransform(fname, meshName=None, tags=[], solverVersion=None):
         meshParam = file.read()
 
     mesh = {
-        'meshName': meshName,
+        'meshName': f'{meshName}.meshmerged.json',
         'meshTags': tags,
         'meshFormat': '',
         'meshSize': 0,
