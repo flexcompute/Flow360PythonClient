@@ -108,7 +108,8 @@ def UploadMesh(meshId, meshFile):
 
     fileSize = os.path.getsize(meshFile)
     prog = UploadProgress(fileSize)
-    config = TransferConfig(max_concurrency=100)
+    config = TransferConfig(multipart_threshold=1024 * 25, max_concurrency=10,
+                            multipart_chunksize=1024 * 25, use_threads=True)
 
     s3Client.upload_file(Bucket=Config.MESH_BUCKET,
                          Filename=meshFile,
