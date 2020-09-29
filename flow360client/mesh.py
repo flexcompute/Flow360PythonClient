@@ -12,6 +12,41 @@ from .httputils import FileDoesNotExist
 from .config import Config
 auth = Config.auth
 keys = Config.user
+
+
+@refreshToken
+def AddMesh2(name, mesh_json, tags, fmat, endianness, solver_version):
+    if not os.path.exists(mesh_json):
+        print('config file {0} does not Exist!'.format(mesh_json), flush=True)
+        raise FileDoesNotExist(mesh_json)
+    '''
+    AddMesh(name, noSlipWalls, tags, fmat, endianness, version)
+    returns the raw HTTP response
+    {
+        'meshId' : 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx',
+        'addTime' : '2019:01:01:01:01:01.000000'
+    }
+    The returned meshId is need to subsequently call UploadMesh
+    Example:
+        resp = AddMesh('foo', [1], [], 'aflr3', 'big')
+        UploadMesh(resp['meshId'], 'mesh.lb8.ugrid')
+    '''
+
+    body = {
+        "meshName": name,
+        "meshTags": tags,
+        "meshFormat": fmat,
+        "meshEndianness" : endianness,
+        "meshParams": json.dumps(json.load(open(mesh_json))),
+
+    }
+
+    if solver_version:
+        body['solverVersion'] = solver_version
+
+    resp = post2("mesh", data=body)
+    return resp
+
 @refreshToken
 def AddMesh(name, noSlipWalls, tags, fmat, endianness, solver_version):
     '''
