@@ -171,9 +171,13 @@ def NewMeshWithTransform(fname, meshName=None, tags=[], solverVersion=None):
     }
 
     finalMesh = post2("mesh", data=mesh)
-    mesh = post2(f'studio/item/{item["itemId"]}/copyToMesh/{finalMesh["meshId"]}')
+    try:
+        mesh = post2(f'studio/item/{item["itemId"]}/copyToMesh/{finalMesh["meshId"]}')
+    except Exception as inst:
+        print(inst.args)
     print("start mesh process on backend")
-    print(mesh)
+    print(finalMesh)
+    return finalMesh
 
 
 def noSlipWallsFromMapbc(mapbcFile):

@@ -1,7 +1,7 @@
 
-from flow360client import mesh
+from flow360client import mesh, NewCase
 
-resp = mesh.AddMesh('OM6_Wing_Tetra', [1], ['OM6'], 'aflr3', 'little', 'release-20.3.1')
+resp = mesh.AddMesh2('OM6_Wing_Tetra', "adf", ['OM6'], 'aflr3', 'little', 'release-20.3.2')
 print(resp)
 meshId = resp['meshId']
 print(meshId)
@@ -13,3 +13,6 @@ print(resp)
 
 resp = mesh.ListMeshes()
 print(resp)
+
+caseId = NewCase(meshId=meshId, config='data/wing_tetra.1.json', caseName='case2_unittest', tags=[],
+            priority='high', parentId=None)
