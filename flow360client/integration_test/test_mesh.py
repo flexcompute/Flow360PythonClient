@@ -21,7 +21,7 @@ class TestMesh(TestCase):
         print(compression)
 
     def test_DeleteMesh(self):
-        resp = mesh.AddMesh('OM6_Wing_Tetra', [1], ['OM6'], 'aflr3', 'little', 'release-20.3.1')['data']
+        resp = mesh.AddMesh('OM6_Wing_Tetra', [1], ['OM6'], 'aflr3', 'little', 'release-20.3.2')
         print(resp)
         meshId = resp['meshId']
         print(meshId)
@@ -30,3 +30,8 @@ class TestMesh(TestCase):
     def test_NewMeshTransform(self):
         NewMeshWithTransform('data/transform/all.json', 'test')
 
+    def test_AddMeshMeshWithJsonFile(self):
+        resp = mesh.AddMeshUsingFile('OM6_Wing_Tetra', 'data/wing_tetra.1.json', ['OM6'], 'aflr3', 'little', 'release-20.3.2')
+        print(resp)
+        meshId = resp['meshId']
+        print(meshId)
