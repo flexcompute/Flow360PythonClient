@@ -148,7 +148,7 @@ def DownloadCaseResults(caseId, fileName):
 def DownloadSolverOut(caseId):
     s3Client.download_file(Bucket=Config.CASE_BUCKET,
                            Filename='solver.out',
-                           Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'solver.out'))
+                           Key='users/{0}/{1}/{2}'.format(keys['UserId'], caseId, 'solver.out'))
 
 def WaitOnCase(caseId, timeout=86400, sleepSeconds=10):
     startTime = time.time()
