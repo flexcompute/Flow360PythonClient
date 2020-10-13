@@ -117,9 +117,9 @@ def GetCaseSurfaceForces(caseId, surfaces):
 
 
 @refreshToken
-def DownloadVolumetricResults(caseId, fileName):
+def DownloadVolumetricResults(caseId, fileName=None):
     if fileName is None:
-        fileName = "vtu.tar.gz"
+        fileName = "volumes.tar.gz"
     if fileName[-7:] != '.tar.gz':
         print('fileName must have extension .tar.gz!')
         return
