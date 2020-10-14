@@ -125,7 +125,7 @@ def DownloadVolumetricResults(caseId, fileName=None):
         return
     s3Client.download_file(Bucket=Config.CASE_BUCKET,
                          Filename=fileName,
-                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))
+                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'volumes.tar.gz'))
 
 @refreshToken
 def DownloadSurfaceResults(caseId, fileName=None):
