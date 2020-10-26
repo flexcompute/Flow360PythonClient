@@ -115,6 +115,15 @@ def GetCaseSurfaceForces(caseId, surfaces):
 
     return resp
 
+@refreshToken
+def DownloadResultsFile(caseId, fileName):
+    if fileName is None:
+        print('fileName must not be None!')
+        return
+    s3Client.download_file(Bucket=Config.CASE_BUCKET,
+                         Filename=fileName,
+                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, fileName))
+
 
 @refreshToken
 def DownloadVolumetricResults(caseId, fileName=None):
@@ -123,9 +132,7 @@ def DownloadVolumetricResults(caseId, fileName=None):
     if fileName[-7:] != '.tar.gz':
         print('fileName must have extension .tar.gz!')
         return
-    s3Client.download_file(Bucket=Config.CASE_BUCKET,
-                         Filename=fileName,
-                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'volumes.tar.gz'))
+    DownloadResultsFile(caseId, fileName)
 
 @refreshToken
 def DownloadSurfaceResults(caseId, fileName=None):
@@ -136,9 +143,7 @@ def DownloadSurfaceResults(caseId, fileName=None):
         print('fileName must have extension .tar.gz!')
         return
 
-    s3Client.download_file(Bucket=Config.CASE_BUCKET,
-                         Filename=fileName,
-                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'surfaces.tar.gz'))
+    DownloadResultsFile(caseId, fileName)
 
 @refreshToken
 def DownloadCaseResults(caseId, fileName):

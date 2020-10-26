@@ -50,15 +50,15 @@ class TestFlow360Case(TestCase):
         print(cases)
 
     def test_GetCaseResidual(self):
-        res = case.GetCaseResidual("bc40fa12-a581-4cd9-8963-ed4f0b9088c2")
+        res = case.GetCaseResidual("45d15afd-00ee-47da-86e2-325c20846915")
         print(res)
 
     def test_GetCaseTotalForces(self):
-        tf = case.GetCaseTotalForces("bc40fa12-a581-4cd9-8963-ed4f0b9088c2")
+        tf = case.GetCaseTotalForces("45d15afd-00ee-47da-86e2-325c20846915")
         print(tf)
 
     def test_GetCaseSurfaceForces(self):
-        sf = case.GetCaseSurfaceForces("a1a7103c-21ff-49ff-8328-dc85d9bc62d3",[])
+        sf = case.GetCaseSurfaceForces("45d15afd-00ee-47da-86e2-325c20846915",[])
         print(sf)
 
     def test_DownloadSurface(self):
@@ -68,4 +68,4 @@ class TestFlow360Case(TestCase):
         sf = case.DownloadVolumetricResults("84c17f09-66ec-48ea-9eeb-1b12f8644b61")
 
     def test_DownloadSolver(self):
-        sf = case.DownloadSolverOut("ac2abe40-a397-4fee-8942-8e8aedef0126")
+        sf = case.DownloadSolverOut("45d15afd-00ee-47da-86e2-325c20846915")
