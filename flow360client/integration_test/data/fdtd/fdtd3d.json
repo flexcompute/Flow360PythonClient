@@ -1,0 +1,60 @@
+{
+  "parameters": {
+    "unit_length": "um",
+    "unit_frequency": "THz",
+    "unit_time": "ps",
+    "x_span": 5,
+    "y_span": 5,
+    "z_span": 5,
+    "xmin_bc": "periodic",
+    "xmax_bc": "periodic",
+    "ymin_bc": "periodic",
+    "ymax_bc": "periodic",
+    "zmin_bc": "periodic",
+    "zmax_bc": "periodic",
+    "resolution": 0.1,
+    "run_time": 1
+  },
+  "objects": [
+    {
+      "name": 0,
+      "type": "Box",
+      "x_cent": 0,
+      "y_cent": 0,
+      "z_cent": 0,
+      "x_span": 1,
+      "y_span": 1,
+      "z_span": 1,
+      "permittivity": 1,
+      "conductivity": 0
+    }
+  ],
+  "sources": [
+    {
+      "name": 0,
+      "type": "PlaneSource",
+      "pos_offset": 0,
+      "frequency": 200,
+      "fwidth": 10,
+      "amplitude": 1,
+      "offset": 3,
+      "normal": "x",
+      "polarization": "y",
+      "current": "electric"
+    }
+  ],
+  "probes": [
+    {
+      "name": 0,
+      "type": "FrequencyProbe",
+      "x_cent": 0,
+      "y_cent": 0,
+      "z_cent": 0,
+      "x_span": 5,
+      "y_span": 0,
+      "z_span": 5,
+      "frequency": 200,
+      "field": "E"
+    }
+  ]
+}
