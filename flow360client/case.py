@@ -125,7 +125,7 @@ def DownloadVolumetricResults(caseId, fileName=None):
         return
     s3Client.download_file(Bucket=Config.CASE_BUCKET,
                          Filename=fileName,
-                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'vtu.tar.gz'))
+                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'volumes.tar.gz'))
 
 @refreshToken
 def DownloadSurfaceResults(caseId, fileName=None):
@@ -145,9 +145,11 @@ def DownloadCaseResults(caseId, fileName):
     DownloadVolumetricResults(caseId, fileName)
 
 @refreshToken
-def DownloadSolverOut(caseId):
+def DownloadSolverOut(caseId, fileName=None):
+    if fileName is None:
+        fileName = 'solver.out'
     s3Client.download_file(Bucket=Config.CASE_BUCKET,
-                           Filename='solver.out',
+                           Filename=fileName,
                            Key='users/{0}/{1}/{2}'.format(keys['UserId'], caseId, 'solver.out'))
 
 def WaitOnCase(caseId, timeout=86400, sleepSeconds=10):
