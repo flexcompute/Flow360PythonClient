@@ -5,6 +5,7 @@ from .s3utils import s3Client
 from .config import Config
 auth = Config.auth
 keys = Config.user
+
 @refreshToken
 def SubmitCase(name, tags, meshId, priority, config, parentId=None):
     body = {
@@ -21,12 +22,14 @@ def SubmitCase(name, tags, meshId, priority, config, parentId=None):
     resp = post2(url, data=body)
     return resp
 
+
 @refreshToken
 def DeleteCase(caseId):
 
     url = f'case/{caseId}'
     resp = delete2(url)
     return resp
+
 
 @refreshToken
 def GetCaseInfo(caseId):
@@ -116,13 +119,15 @@ def GetCaseSurfaceForces(caseId, surfaces):
     return resp
 
 @refreshToken
-def DownloadResultsFile(caseId, fileName):
-    if fileName is None:
-        print('fileName must not be None!')
+def DownloadResultsFile(caseId, src, target=None):
+    if target is None:
+        target = src
+    if src is None:
+        print('src fileName must not be None!')
         return
     s3Client.download_file(Bucket=Config.CASE_BUCKET,
-                         Filename=fileName,
-                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, fileName))
+                         Filename=target,
+                         Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, src))
 
 
 @refreshToken
@@ -132,7 +137,7 @@ def DownloadVolumetricResults(caseId, fileName=None):
     if fileName[-7:] != '.tar.gz':
         print('fileName must have extension .tar.gz!')
         return
-    DownloadResultsFile(caseId, fileName)
+    DownloadResultsFile(caseId, "volumes.tar.gz", fileName)
 
 @refreshToken
 def DownloadSurfaceResults(caseId, fileName=None):
@@ -143,11 +148,7 @@ def DownloadSurfaceResults(caseId, fileName=None):
         print('fileName must have extension .tar.gz!')
         return
 
-    DownloadResultsFile(caseId, fileName)
-
-@refreshToken
-def DownloadCaseResults(caseId, fileName):
-    DownloadVolumetricResults(caseId, fileName)
+    DownloadResultsFile(caseId, "surfaces.tar.gz", fileName)
 
 @refreshToken
 def DownloadSolverOut(caseId, fileName=None):
