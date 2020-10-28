@@ -27,6 +27,7 @@ def authentication_api(email, password):
     Config.auth = auth
     Config.user = newKeys
 
+
 def getEmailPasswdAuthKey():
     flow360dir = os.path.expanduser('~/.flow360')
     if os.path.exists('{0}/{1}'.format(flow360dir, 'email')) and \
