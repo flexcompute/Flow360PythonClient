@@ -1,5 +1,5 @@
 
-from flow360client import mesh, NewCase
+from flow360client import mesh, NewCase, NewCaseListWithPhase
 
 resp = mesh.AddMesh('cylinder.cgns', ["fluid/wall"], ['tag1'], 'cgns', '', 'release-20.3.1')
 print(resp)
@@ -12,3 +12,8 @@ caseId = NewCase(meshId=meshId, config='data/cyclinder_case.json', caseName='cas
             priority='high', parentId=None)
 
 print(caseId)
+
+caseIds = NewCaseListWithPhase(meshId=meshId, config='data/cyclinder_case.json', caseName='case_stuck', tags=[],
+            priority='high', parentId=None, phaseCount=4)
+
+print(caseIds)
