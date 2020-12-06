@@ -28,6 +28,30 @@ def NewCase(meshId, config, caseName=None, tags=[],
     return resp['caseId']
 
 
+def NewCaseListWithPhase(meshId, config, caseName=None, tags=[],
+                         priority='high', parentId=None, phaseCount=1):
+    if isinstance(config, str):
+        if not os.path.exists(config):
+            print('config file {0} does not Exist!'.format(config), flush=True)
+            raise FileDoesNotExist(config)
+        if caseName is None:
+            caseName = os.path.basename(config).split('.')[0]
+        config = json.load(open(config))
+    assert isinstance(config, dict)
+    assert caseName is not None
+    assert phaseCount >= 1
+    caseIds = []
+    totalSteps = config['timeStepping']['maxPhysicalSteps']
+    phaseSteps = int(totalSteps / phaseCount)
+    while totalSteps > 0:
+        config['timeStepping']['maxPhysicalSteps'] = min(totalSteps, phaseSteps)
+        resp = case.SubmitCase(caseName, tags, meshId, priority, json.dumps(config), parentId)
+        caseIds.append(resp['caseId'])
+        totalSteps = totalSteps - phaseSteps
+        parentId = resp['caseId']
+    return caseIds
+
+
 def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
             fmat=None, endianness=None, solverVersion=None):
     if not os.path.exists(fname):
