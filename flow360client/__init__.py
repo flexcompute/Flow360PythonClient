@@ -1,3 +1,4 @@
+import math
 import os
 import json
 import sys
@@ -42,13 +43,16 @@ def NewCaseListWithPhase(meshId, config, caseName=None, tags=[],
     assert phaseCount >= 1
     caseIds = []
     totalSteps = config['timeStepping']['maxPhysicalSteps']
-    phaseSteps = int(totalSteps / phaseCount)
+    phaseSteps = math.ceil(totalSteps / phaseCount)
+    index = 1
+
     while totalSteps > 0:
         config['timeStepping']['maxPhysicalSteps'] = min(totalSteps, phaseSteps)
-        resp = case.SubmitCase(caseName, tags, meshId, priority, json.dumps(config), parentId)
+        resp = case.SubmitCase(f'{caseName}_{index}', tags, meshId, priority, json.dumps(config), parentId)
         caseIds.append(resp['caseId'])
         totalSteps = totalSteps - phaseSteps
         parentId = resp['caseId']
+        index = index + 1
     return caseIds
 
 
