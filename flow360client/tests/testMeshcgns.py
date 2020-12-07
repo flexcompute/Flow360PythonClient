@@ -14,6 +14,6 @@ caseId = NewCase(meshId=meshId, config='data/cyclinder_case.json', caseName='cas
 print(caseId)
 
 caseIds = NewCaseListWithPhase(meshId=meshId, config='data/cyclinder_case.json', caseName='case_stuck', tags=[],
-            priority='high', parentId=None, phaseCount=4)
+            priority='high', parentId=None, phaseCount=3)
 
 print(caseIds)
