@@ -1,3 +1,4 @@
+import json
 from unittest import TestCase
 
 from flow360client import mesh, NewMeshWithTransform
@@ -30,8 +31,9 @@ class TestMesh(TestCase):
     def test_NewMeshTransform(self):
         NewMeshWithTransform('data/transform/all.json', 'test')
 
-    def test_AddMeshMeshWithJsonFile(self):
-        resp = mesh.AddMeshUsingFile('OM6_Wing_Tetra', 'data/wing_tetra.1.json', ['OM6'], 'aflr3', 'little', 'release-20.3.2')
-        print(resp)
-        meshId = resp['meshId']
-        print(meshId)
+    def test_AddMeshMeshWithJson(self):
+        with open('data/wing_tetra.1.json') as json_file:
+            resp = mesh.AddMeshWithJson('OM6_Wing_Tetra', json.load(json_file), ['OM6'], 'aflr3', 'little', 'release-20.3.2')
+            print(resp)
+            meshId = resp['meshId']
+            print(meshId)
