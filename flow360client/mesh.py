@@ -14,12 +14,8 @@ keys = Config.user
 
 
 @refreshToken
-def AddMeshUsingFile(name, mesh_json, tags, fmat, endianness, solver_version):
-    if not os.path.exists(mesh_json):
-        print('config file {0} does not Exist!'.format(mesh_json), flush=True)
-        raise FileDoesNotExist(mesh_json)
-    with open(mesh_json) as json_file:
-        return AddMeshBase(name, json.load(json_file), tags, fmat, endianness, solver_version)
+def AddMeshWithJson(name, mesh_json, tags, fmat, endianness, solver_version):
+    return AddMeshBase(name, mesh_json, tags, fmat, endianness, solver_version)
 
 
 

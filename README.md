@@ -32,6 +32,8 @@ If there are multiple surfaces of no-slip walls in your mesh, use a comma betwee
 Then submit a mesh
 ```
 >>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', noSlipWalls=noSlipWalls, meshName='my_experiment', tags=['wing'])
+>>>meshId = flow360client.NewMesh(fname='flow360/tests/data/wing_tetra.1.lb8.ugrid', meshJson=meshJsonObject, meshName='my_experiment', tags=['wing'])
+
 ```
 Replace above fname and noSlipWalls with your own file path and parameter. Currently the only supported format is UGRID. Allowable extensions are .ugrid, .ugrid.gz, and .ugrid.bz2. 
 Parameter inputs of mesh name and tags are optional.

@@ -56,7 +56,7 @@ def NewCaseListWithPhase(meshId, config, caseName=None, tags=[],
     return caseIds
 
 
-def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
+def NewMesh(fname, noSlipWalls=None, meshJson=None, meshName=None, tags=[],
             fmat=None, endianness=None, solverVersion=None):
     if not os.path.exists(fname):
         print('mesh file {0} does not Exist!'.format(fname), flush=True)
@@ -86,8 +86,18 @@ def NewMesh(fname, noSlipWalls, meshName=None, tags=[],
         except:
             raise RuntimeError('Unknown endianness for file {}'.format(fname))
 
+    if noSlipWalls is None and meshJson is None:
+        raise RuntimeError('Both noSlipWals or meshJson are none')
 
-    resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness, solverVersion)
+    if noSlipWalls is not None and meshJson is not None:
+        noSlipWalls = None
+        print('noSlipWalls will be override by meshJson')
+
+    if noSlipWalls is not None:
+        resp = mesh.AddMesh(meshName, noSlipWalls, tags, fmat, endianness, solverVersion)
+    else:
+        resp = mesh.AddMeshWithJson(meshName, meshJson, tags, fmat, endianness, solverVersion)
+
     meshId = resp['meshId']
     mesh.UploadMesh(meshId, fname)
     print()
