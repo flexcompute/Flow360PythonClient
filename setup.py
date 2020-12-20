@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '20.4.1.0';
+version = '20.4.1.1';
 setup(
     name='flow360client',
     version=version,
