@@ -4,10 +4,10 @@ from flow360client import case
 
 class TestFlow360Case(TestCase):
     def test_SubmitCase(self):
-        case.SubmitCase(
+        resp = case.SubmitCase(
             "unittest_name"
             ,[1]
-            ,"bfa29e8f-5c9e-4777-8648-8c8f189c60a9"
+            ,"d62b5d68-ce74-4aab-8ed9-e6008c24cedb"
             ,"high"
             ,'''
             {
@@ -33,6 +33,7 @@ class TestFlow360Case(TestCase):
             }
             '''
         )
+        print(resp)
 
     def test_DeleteCase(self):
         case.DeleteCase("58d025b3-b1c5-4b7c-be8e-aa91a7e4064e")
@@ -42,7 +43,7 @@ class TestFlow360Case(TestCase):
         print(caseInfo)
 
     def test_GetCaseInfo(self):
-        caseInfo = case.GetCaseInfo("bc40fa12-a581-4cd9-8963-ed4f0b9088c2")
+        caseInfo = case.GetCaseInfo("c51bb113-4cda-40f5-81c4-887cd8452126")
         print(caseInfo)
 
     def test_ListCases(self):

@@ -1,3 +1,4 @@
+import json
 import time
 from .authentication import refreshToken
 from .httputils import post2, delete2, get2
@@ -37,6 +38,15 @@ def GetCaseInfo(caseId):
     url = f'case/{caseId}'
 
     resp = get2(url)
+    runtime = get2(f'case/{caseId}/runtimeParams')
+    runtimeContent = None
+    try:
+        runtimeContent = json.loads(runtime['content'])
+    except Exception as e:
+        print('invalid runtimeParams or not exist:' + runtime['content'])
+        return None
+
+    resp['runtimeParams'] = runtimeContent
     return resp
 
 @refreshToken

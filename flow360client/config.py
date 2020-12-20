@@ -1,4 +1,4 @@
-#
+
 # class Config:
 #     S3_REGION="us-east-1"
 #     CASE_BUCKET="flow360cases-v1"
@@ -13,7 +13,7 @@
 #     #other
 #     auth_retry = 0
 #     VERSION_CFD = 'beta-20.4.1'
-#     VERSION_FDTD = 'beta-20.4.1.0'
+
 
 class Config:
     S3_REGION="us-gov-west-1"
