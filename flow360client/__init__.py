@@ -62,7 +62,7 @@ def NewMesh(fname, noSlipWalls=None, meshJson=None, meshName=None, tags=[],
         print('mesh file {0} does not Exist!'.format(fname), flush=True)
         raise FileDoesNotExist(fname)
     if meshName is None:
-        meshName = os.path.basename(fname).split('.')[0]
+        meshName = os.path.splittext(fname)[0]
 
     if fmat is None:
         if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \
