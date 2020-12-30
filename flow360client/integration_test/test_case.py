@@ -73,3 +73,8 @@ class TestFlow360Case(TestCase):
 
     def test_DownloadSolver(self):
         sf = case.DownloadResultsFile("45d288e1-738b-4712-9e92-f15d903ba839", "restart.tar.gz")
+
+    def test_GetCaseSurfaceForcesByNames(self):
+        caseId = "c09e0c04-5b18-44bf-9106-06f628055605"
+        surfaces = case.GetCaseSurfaceForcesByNames(caseId, ['fluid/farfield', 'fluid/periodic_0_r'])
+        print(surfaces)

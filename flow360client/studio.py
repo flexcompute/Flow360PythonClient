@@ -14,8 +14,10 @@ def UploadStudioItem(itemId, file):
     path, filename = os.path.split(file)
     fileSize = os.path.getsize(file)
     prog = UploadProgress(fileSize)
-    config = TransferConfig(max_concurrency=100)
     key = 'users/{0}/{1}/{2}'.format(keys['userId'], itemId, filename)
+    config = TransferConfig(multipart_threshold=1024 * 25, max_concurrency=10,
+                            multipart_chunksize=1024 * 25, use_threads=True)
+
     s3Client.upload_file(Bucket=Config.STUDIO_BUCKET,
                          Filename=file,
                          Key=key,

@@ -8,7 +8,7 @@ from flow360client.mesh import ListMeshes, GetMeshInfo, getFileCompression, Dele
 
 class TestMesh(TestCase):
     def test_GetMeshInfo(self):
-        GetMeshInfo("bfa29e8f-5c9e-4777-8648-8c8f189c60a9")
+        GetMeshInfo("2237419e-238c-44eb-9c1d-d52c1a5ea058")
 
     def test_DownloadMeshProc(self):
         mesh.DownloadMeshProc("bfa29e8f-5c9e-4777-8648-8c8f189c60a9")

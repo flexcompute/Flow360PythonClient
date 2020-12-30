@@ -141,7 +141,6 @@ def DownloadMeshProc(meshId):
                            Key='users/{0}/{1}/info/{2}'.format(keys['userId'], meshId, 'meshproc.out'))
 
 
-
 def WaitOnMesh(meshId, timeout=86400, sleepSeconds=10):
     startTime = time.time()
     while time.time() - startTime < timeout:
