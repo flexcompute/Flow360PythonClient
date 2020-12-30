@@ -3,6 +3,7 @@ import os
 import json
 import sys
 import uuid
+from os.path import basename
 
 import flow360client.mesh
 import flow360client.case
@@ -62,7 +63,7 @@ def NewMesh(fname, noSlipWalls=None, meshJson=None, meshName=None, tags=[],
         print('mesh file {0} does not Exist!'.format(fname), flush=True)
         raise FileDoesNotExist(fname)
     if meshName is None:
-        meshName = os.path.splittext(fname)[0]
+        meshName = os.path.splitext(basename(fname))[0]
 
     if fmat is None:
         if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \

@@ -1,12 +1,12 @@
 
-from flow360client import mesh, NewMesh, NewCase
+from flow360client import mesh, NewMesh, NewCase, Config
 
-meshId = NewMesh(fname='data/vortex_100.cgns', noSlipWalls=[], tags=['tag1'], fmat='cgns', endianness='', solverVersion='release-20.3.2')
+meshId = NewMesh(fname='data/cylinder.cgns', noSlipWalls=["fluid/wall"], tags=['tag1'], fmat='cgns', endianness='', solverVersion=Config.VERSION_CFD)
 print(meshId)
 
 resp = mesh.ListMeshes()
 print(resp)
-caseId = NewCase(meshId=meshId, config='data/cyclinder_case.json', caseName='case2', tags=[],
+caseId = NewCase(meshId=meshId, config='data/cyclinder_case.json', caseName='cyclinder_case_2', tags=[],
             priority='high', parentId=None)
 
 print(caseId)
