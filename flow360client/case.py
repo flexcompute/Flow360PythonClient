@@ -202,7 +202,7 @@ def WaitOnCase(caseId, timeout=86400, sleepSeconds=10):
         try:
             info = GetCaseInfo(caseId)
             if info['caseStatus'] in ['error', 'unknownError', 'completed']:
-                return info['status']
+                return info['caseStatus']
         except Exception as e:
             print('Warning : {0}'.format(str(e)))
 
