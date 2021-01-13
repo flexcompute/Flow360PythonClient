@@ -42,9 +42,9 @@ def translate_geometry(g):
         "momentCenter" : [float(g['x_moment_center']),
                           float(g['y_moment_center']),
                           float(g['z_moment_center'])],
-        "momentLength" : [float(g['x_moment_length']),
-                          float(g['y_moment_length']),
-                          float(g['x_moment_length'])]
+        "momentLength" : [float(g['y_moment_length']),
+                          float(g['x_moment_length']),
+                          float(g['y_moment_length'])]
     }
 
 def translate_navier_stokes(rc, nl, **args):
