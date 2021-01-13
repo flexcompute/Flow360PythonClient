@@ -3,6 +3,7 @@ import os
 import json
 import sys
 import uuid
+from os.path import basename
 
 import flow360client.mesh
 import flow360client.case
@@ -55,14 +56,13 @@ def NewCaseListWithPhase(meshId, config, caseName=None, tags=[],
         index = index + 1
     return caseIds
 
-
-def NewMesh(fname, noSlipWalls=None, meshJson=None, meshName=None, tags=[],
-            fmat=None, endianness=None, solverVersion=None):
+def NewMesh(fname, noSlipWalls=None, meshName=None, tags=[],
+            fmat=None, endianness=None, solverVersion=None, meshJson=None):
     if not os.path.exists(fname):
         print('mesh file {0} does not Exist!'.format(fname), flush=True)
         raise FileDoesNotExist(fname)
     if meshName is None:
-        meshName = os.path.basename(fname).split('.')[0]
+        meshName = os.path.splitext(basename(fname))[0]
 
     if fmat is None:
         if fname.endswith('.ugrid') or fname.endswith('.ugrid.gz') or \

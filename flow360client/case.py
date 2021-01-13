@@ -1,5 +1,7 @@
 import json
 import time
+
+from . import mesh
 from .authentication import refreshToken
 from .httputils import post2, delete2, get2
 from .s3utils import s3Client
@@ -84,27 +86,10 @@ def GetCaseSurfaceForces(caseId, surfaces):
         print('no surface forces available')
         return None
 
-    def readCSV(d):
-        data = [[x for x in l.split(', ') if x] for l in d.split('\n')]
-        ncol = len(data[0])
-        nrow = len(data)
-        new = [[float(data[i][c]) for i in range(1,nrow) if len(data[i])] for c in range(0,ncol)]
-        return (data[0], new)
-
-    def assignCSVHeaders(keys, arrays, surfaceId):
-        response = {}
-        for idx, key in enumerate(keys):
-            if key=='steps':
-                response[key] = arrays[0]
-            else:
-                response[key] = arrays[idx + surfaceId*24]
-        return response
-
     headerKeys = ['steps',
                   'CL', 'CD', 'CFx', 'CFy', 'CFz', 'CMx', 'CMy', 'CMz',
                   'CLPressure', 'CDPressure', 'CFxPressure', 'CFyPressure', 'CFzPressure', 'CMxPressure', 'CMyPressure', 'CMzPressure',
                   'CLViscous', 'CDViscous', 'CFxViscous', 'CFyViscous', 'CFzViscous', 'CMxViscous', 'CMyViscous', 'CMzViscous']
-
 
     headers, forces = readCSV(data)
     resp = {}
@@ -125,6 +110,49 @@ def GetCaseSurfaceForces(caseId, surfaces):
                 print('surfaceId={0} is out of range. Max surface id should be {1}'.format(surfaceId, int(len(forces)-1)/24-1))
                 raise RuntimeError('indexOutOfRange')
         resp[surfaceName] = allSurfaceForces
+
+    return resp
+
+@refreshToken
+# caseId: case uuid to retrieve case
+# surfaces: the sorted list of surface names
+def GetCaseSurfaceForcesByNames(caseId, surfaces):
+
+    caseInfo = GetCaseInfo(caseId)
+    # print(caseInfo)
+    meshInfo = mesh.GetMeshInfo(caseInfo['caseMeshId'])
+    boundaryNames = meshInfo['boundaries']
+    print('fetch the name of boundaries:\n')
+    print(boundaryNames)
+    if boundaryNames is None or len(boundaryNames) == 0:
+        raise RuntimeError('the boundaries name is empty, please re-process the mesh to populate the data')
+
+    try:
+        obj = s3Client.get_object(Bucket=Config.CASE_BUCKET,
+                                  Key='users/{0}/{1}/results/{2}'.format(keys['UserId'], caseId, 'surface_forces.csv'))
+        data = obj['Body'].read().decode('utf-8')
+    except Exception as e:
+        print('no surface forces available')
+        return None
+
+
+    headerKeys = ['steps',
+                  'CL', 'CD', 'CFx', 'CFy', 'CFz', 'CMx', 'CMy', 'CMz',
+                  'CLPressure', 'CDPressure', 'CFxPressure', 'CFyPressure', 'CFzPressure', 'CMxPressure', 'CMyPressure', 'CMzPressure',
+                  'CLViscous', 'CDViscous', 'CFxViscous', 'CFyViscous', 'CFzViscous', 'CMxViscous', 'CMyViscous', 'CMzViscous']
+
+    headers, forces = readCSV(data)
+    resp = {}
+
+    for surfaceName in surfaces:
+        surfaceId = boundaryNames.index(surfaceName)
+
+        if int(surfaceId) <= (len(forces)-1)/24:
+            surfaceForces = assignCSVHeaders(headerKeys, forces, int(surfaceId)-1)
+            resp[surfaceName] = surfaceForces
+        else:
+            print('surfaceId={0} is out of range. Max surface id should be {1}'.format(surfaceId, int(len(forces)-1)/24-1))
+            raise RuntimeError('indexOutOfRange')
 
     return resp
 
@@ -174,8 +202,24 @@ def WaitOnCase(caseId, timeout=86400, sleepSeconds=10):
         try:
             info = GetCaseInfo(caseId)
             if info['caseStatus'] in ['error', 'unknownError', 'completed']:
-                return info['status']
+                return info['caseStatus']
         except Exception as e:
             print('Warning : {0}'.format(str(e)))
 
         time.sleep(sleepSeconds)
+
+def readCSV(d):
+    data = [[x for x in l.split(', ') if x] for l in d.split('\n')]
+    ncol = len(data[0])
+    nrow = len(data)
+    new = [[float(data[i][c]) for i in range(1,nrow) if len(data[i])] for c in range(0,ncol)]
+    return (data[0], new)
+
+def assignCSVHeaders(keys, arrays, surfaceId):
+    response = {}
+    for idx, key in enumerate(keys):
+        if key=='steps':
+            response[key] = arrays[0]
+        else:
+            response[key] = arrays[idx + surfaceId*24]
+    return response
