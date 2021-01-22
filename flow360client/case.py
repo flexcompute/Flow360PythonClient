@@ -145,13 +145,13 @@ def GetCaseSurfaceForcesByNames(caseId, surfaces):
     resp = {}
 
     for surfaceName in surfaces:
-        surfaceId = boundaryNames.index(surfaceName)
+        surfaceId0Based = boundaryNames.index(surfaceName)
 
-        if int(surfaceId) <= (len(forces)-1)/24:
-            surfaceForces = assignCSVHeaders(headerKeys, forces, int(surfaceId)-1)
+        if int(surfaceId0Based) <= (len(forces)-1)/24:
+            surfaceForces = assignCSVHeaders(headerKeys, forces, int(surfaceId0Based))
             resp[surfaceName] = surfaceForces
         else:
-            print('surfaceId={0} is out of range. Max surface id should be {1}'.format(surfaceId, int(len(forces)-1)/24-1))
+            print('surfaceId0Based={0} is out of range. Max surface id should be {1}'.format(surfaceId0Based, int(len(forces)-1)/24-1))
             raise RuntimeError('indexOutOfRange')
 
     return resp
