@@ -135,9 +135,11 @@ def UploadMesh(meshId, meshFile):
     UpdateMesh(meshInfo)
 
 @refreshToken
-def DownloadMeshProc(meshId):
+def DownloadMeshProc(meshId, fileName=None):
+    if fileName == None:
+        fileName = 'meshproc.out'
     s3Client.download_file(Bucket=Config.MESH_BUCKET,
-                           Filename='meshproc.out',
+                           Filename=fileName,
                            Key='users/{0}/{1}/info/{2}'.format(keys['userId'], meshId, 'meshproc.out'))
 
 
